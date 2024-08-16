@@ -1,15 +1,17 @@
 package com.radz.wfh.model;
 
+import com.radz.wfh.constant.WfhConstants;
 import com.radz.wfh.constant.WfhType;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-
+@Builder
 @Entity
 @Table(name = "EMPLOYEE_WFH_DETAIL")
 @Getter
@@ -17,31 +19,32 @@ import java.time.LocalDateTime;
 @IdClass(EmployeeWfhDetail.class)
 public class EmployeeWfhDetail {
 
-    @Id
-    private Long employeeId;
+  @Id private Long employeeId;
 
-    @Id
-    private WfhType wfhType;
+  @Id private WfhType wfhType;
 
-    @ColumnDefault("0")
-    private int quantityAvailed;
+  @ColumnDefault("0")
+  private int quantityAvailed;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int pendingApproval;
+  @Column(nullable = false)
+  @ColumnDefault("0")
+  private int pendingApproval;
 
-    @ManyToOne
-    private EmployeeDetail employeeDetail;
+  @ManyToOne private EmployeeDetail employeeDetail;
 
-    @Column(nullable = false)
-    private String createdBy;
+  @Builder.Default
+  @Column(nullable = false, updatable = false)
+  private String createdBy = WfhConstants.APP_USER;
 
-    @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdTimestamp;
+  @CreationTimestamp
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdTimestamp;
 
-    private String updatedBy;
+  @Builder.Default
+  @Column(nullable = false)
+  private String updatedBy = WfhConstants.APP_USER;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedTimestamp;
+  @UpdateTimestamp
+  @Column(nullable = false)
+  private LocalDateTime updatedTimestamp;
 }

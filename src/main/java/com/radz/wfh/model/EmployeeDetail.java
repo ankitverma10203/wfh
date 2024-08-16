@@ -1,14 +1,14 @@
 package com.radz.wfh.model;
 
+import com.radz.wfh.constant.EmployeeStatus;
 import com.radz.wfh.constant.Role;
+import com.radz.wfh.constant.WfhConstants;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "EMPLOYEE_DETAIL")
@@ -17,32 +17,38 @@ import java.util.List;
 @Setter
 public class EmployeeDetail {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long employeeId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long employeeId;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private Role role;
+  @Column(nullable = false)
+  private Role role;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private Long managerId = 0L;
+  @Builder.Default
+  @Column(nullable = false)
+  private Long managerId = 0L;
 
-    @OneToMany(mappedBy = "employeeDetail")
-    private List<EmployeeWfhDetail> employeeWfhDetailList;
+  private EmployeeStatus status;
 
-    @Column(nullable = false, updatable = false)
-    private String createdBy;
+  @OneToMany(mappedBy = "employeeDetail")
+  private List<EmployeeWfhDetail> employeeWfhDetailList;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdTimestamp;
+  @Builder.Default
+  @Column(nullable = false, updatable = false)
+  private String createdBy = WfhConstants.APP_USER;
 
-    private String updatedBy;
+  @CreationTimestamp
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdTimestamp;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedTimestamp;
+  @Builder.Default
+  @Column(nullable = false)
+  private String updatedBy = WfhConstants.APP_USER;
+
+  @UpdateTimestamp
+  @Column(nullable = false)
+  private LocalDateTime updatedTimestamp;
 }

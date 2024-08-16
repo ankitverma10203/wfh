@@ -1,7 +1,9 @@
 package com.radz.wfh.controller;
 
-import com.radz.wfh.constant.Role;
-import com.radz.wfh.model.EmployeeDetail;
+import com.radz.wfh.constant.EmployeeStatus;
+import com.radz.wfh.constant.WfhType;
+import com.radz.wfh.dto.EmployeeDetailDto;
+import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.WfhDetailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,21 +13,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/wfh")
 public class WfhController {
 
-    private final WfhDetailService wfhDetailService;
+  private final WfhDetailService wfhDetailService;
+  private final EmployeeRegistrationService employeeRegistrationService;
 
-    public WfhController(WfhDetailService wfhDetailService) {
-        this.wfhDetailService = wfhDetailService;
-    }
+  public WfhController(
+      WfhDetailService wfhDetailService, EmployeeRegistrationService employeeRegistrationService) {
+    this.wfhDetailService = wfhDetailService;
+    this.employeeRegistrationService = employeeRegistrationService;
+  }
 
-    @GetMapping("/getEmployeeWfhDetail/{employeeId}")
-    public ResponseEntity<?> getEmployeeWfhDetail(@PathVariable("employeeId") Long employeeId) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+  @GetMapping("/getEmployeeWfhDetail/{employeeId}")
+  public ResponseEntity<?> getEmployeeWfhDetail(@PathVariable("employeeId") Long employeeId) {
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    @PostMapping("/saveEmployeeDetail/{name}/{role}")
-    public ResponseEntity<EmployeeDetail> saveEmployeeDetail(@PathVariable("name") String name, @PathVariable("role") Role role) {
+  @PostMapping("/register")
+  public ResponseEntity<?> saveEmployeeDetail(@RequestBody EmployeeDetailDto employeeDetail) {
 
-        EmployeeDetail employeeDetail = wfhDetailService.saveEmployeeDetail(name, role);
-        return new ResponseEntity<>(employeeDetail, HttpStatus.OK);
-    }
+    EmployeeStatus registerStatus = employeeRegistrationService.register(employeeDetail);
+    return new ResponseEntity<>(registerStatus, HttpStatus.OK);
+  }
+
+  @PostMapping("/request/{wfhType}")
+  public ResponseEntity<?> requestWfh(@PathVariable("wfhType") WfhType wfhType) {
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
