@@ -1,13 +1,15 @@
 package com.radz.wfh.model;
 
 import com.radz.wfh.constant.WfhConstants;
+import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.constant.WfhType;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,19 +18,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "EMPLOYEE_WFH_DETAIL")
 @Getter
 @Setter
-@IdClass(EmployeeWfhDetail.class)
+@IdClass(EmployeeWfhDetailId.class)
 public class EmployeeWfhDetail {
 
   @Id private Long employeeId;
 
   @Id private WfhType wfhType;
 
-  @ColumnDefault("0")
-  private int quantityAvailed;
+  @Id private LocalDate requestedWfhDate;
 
-  @Column(nullable = false)
-  @ColumnDefault("0")
-  private int pendingApproval;
+  private WfhRequestStatus status;
 
   @ManyToOne private EmployeeDetail employeeDetail;
 

@@ -1,7 +1,7 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.EmployeeStatus;
-import com.radz.wfh.dto.EmployeeDetailDto;
+import com.radz.wfh.dto.EmployeeDetailRequest;
 import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
@@ -24,7 +24,7 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
   }
 
   @Override
-  public EmployeeStatus register(EmployeeDetailDto employeeDetailDto) {
+  public EmployeeStatus register(EmployeeDetailRequest employeeDetailRequest) {
 
     EmployeeStatus status =
         employeeDetailService.doesAdminExist()
@@ -33,8 +33,8 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
 
     EmployeeDetail employeeDetail =
         EmployeeDetail.builder()
-            .name(employeeDetailDto.getName())
-            .role(employeeDetailDto.getRole())
+            .name(employeeDetailRequest.getName())
+            .role(employeeDetailRequest.getRole())
             .status(status)
             .build();
 

@@ -1,8 +1,8 @@
 package com.radz.wfh.controller;
 
 import com.radz.wfh.constant.EmployeeStatus;
-import com.radz.wfh.constant.WfhType;
-import com.radz.wfh.dto.EmployeeDetailDto;
+import com.radz.wfh.dto.EmployeeDetailRequest;
+import com.radz.wfh.dto.EmployeeWfhRequest;
 import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.WfhDetailService;
 import org.springframework.http.HttpStatus;
@@ -28,14 +28,16 @@ public class WfhController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> saveEmployeeDetail(@RequestBody EmployeeDetailDto employeeDetail) {
+  public ResponseEntity<?> register(@RequestBody EmployeeDetailRequest employeeDetail) {
 
     EmployeeStatus registerStatus = employeeRegistrationService.register(employeeDetail);
     return new ResponseEntity<>(registerStatus, HttpStatus.OK);
   }
 
-  @PostMapping("/request/{wfhType}")
-  public ResponseEntity<?> requestWfh(@PathVariable("wfhType") WfhType wfhType) {
-    return new ResponseEntity<>(HttpStatus.OK);
+  @PostMapping("/requestWfh")
+  public ResponseEntity<?> requestWfh(@RequestBody EmployeeWfhRequest employeeWfhRequest) {
+
+    boolean req = wfhDetailService.requestWfh(employeeWfhRequest);
+    return new ResponseEntity<>(req, HttpStatus.OK);
   }
 }
