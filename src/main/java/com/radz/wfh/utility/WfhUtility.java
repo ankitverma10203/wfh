@@ -9,4 +9,10 @@ public class WfhUtility {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     return bCryptPasswordEncoder.encode(password);
   }
+
+  public static boolean validatePassword(String password, String hashedPassword) {
+
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return bCryptPasswordEncoder.matches(password, hashedPassword);
+  }
 }

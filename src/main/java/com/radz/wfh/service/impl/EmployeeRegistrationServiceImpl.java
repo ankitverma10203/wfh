@@ -9,6 +9,7 @@ import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.utility.WfhUtility;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,12 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
     this.employeeCredentialRepository = employeeCredentialRepository;
   }
 
+  @Transactional
   @Override
   public EmployeeStatus register(EmployeeRegistrationRequest employeeRegistrationRequest) {
 
-    String hashedPassword = WfhUtility.generateHashedValue(employeeRegistrationRequest.getPassword());
+    String hashedPassword =
+        WfhUtility.generateHashedValue(employeeRegistrationRequest.getPassword());
     employeeRegistrationRequest.setPassword(hashedPassword);
 
     EmployeeStatus status =
@@ -52,11 +55,12 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
   }
 
   private Long saveEmployeeDetails(
-          EmployeeRegistrationRequest employeeRegistrationRequest, EmployeeStatus status) {
+      EmployeeRegistrationRequest employeeRegistrationRequest, EmployeeStatus status) {
     EmployeeDetail employeeDetail =
         EmployeeDetail.builder()
             .name(employeeRegistrationRequest.getName())
             .role(employeeRegistrationRequest.getRole())
+            .email(employeeRegistrationRequest.getEmail())
             .status(status)
             .build();
 
