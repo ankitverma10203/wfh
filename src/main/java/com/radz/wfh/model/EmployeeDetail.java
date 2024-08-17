@@ -27,14 +27,21 @@ public class EmployeeDetail {
   @Column(nullable = false)
   private Role role;
 
+  @Column(nullable = false, unique = true)
+  private String email;
+
   @Builder.Default
   @Column(nullable = false)
   private Long managerId = 0L;
 
+  @Enumerated(EnumType.STRING)
   private EmployeeStatus status;
 
   @OneToMany(mappedBy = "employeeDetail")
   private List<EmployeeWfhDetail> employeeWfhDetailList;
+
+  @OneToOne(mappedBy = "employeeDetail")
+  private EmployeeCredential employeeCredential;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

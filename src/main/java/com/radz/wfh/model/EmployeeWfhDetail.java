@@ -23,10 +23,12 @@ public class EmployeeWfhDetail {
 
   @Id private Long employeeId;
 
+  @Enumerated(EnumType.STRING)
   @Id private WfhType wfhType;
 
   @Id private LocalDate requestedWfhDate;
 
+  @Enumerated(EnumType.STRING)
   private WfhRequestStatus status;
 
   @ManyToOne private EmployeeDetail employeeDetail;

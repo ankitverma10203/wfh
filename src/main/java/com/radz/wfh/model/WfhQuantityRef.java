@@ -2,10 +2,8 @@ package com.radz.wfh.model;
 
 import com.radz.wfh.constant.WfhConstants;
 import com.radz.wfh.constant.WfhType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +18,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 public class WfhQuantityRef {
 
+  @Enumerated(EnumType.STRING)
   @Id private WfhType wfhType;
 
   @Column(nullable = false)

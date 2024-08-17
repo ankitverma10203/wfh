@@ -1,8 +1,8 @@
 package com.radz.wfh.service;
 
-import com.radz.wfh.dto.EmployeeWfhRequest;
+import com.radz.wfh.dto.EmployeeWfhData;
 
 public interface WfhDetailService {
 
-  boolean requestWfh(EmployeeWfhRequest employeeWfhRequest);
+  boolean requestWfh(EmployeeWfhData employeeWfhData);
 }

@@ -2,7 +2,7 @@ package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.constant.WfhType;
-import com.radz.wfh.dto.EmployeeWfhRequest;
+import com.radz.wfh.dto.EmployeeWfhData;
 import com.radz.wfh.model.EmployeeWfhDetail;
 import com.radz.wfh.model.WfhQuantityRef;
 import com.radz.wfh.repository.EmployeeWfhDetailRepository;
@@ -31,42 +31,42 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   }
 
   @Override
-  public boolean requestWfh(EmployeeWfhRequest employeeWfhRequest) {
+  public boolean requestWfh(EmployeeWfhData employeeWfhData) {
 
-    if (validateWfhRequest(employeeWfhRequest)) {
+    if (validateWfhRequest(employeeWfhData)) {
       return false;
     }
 
     EmployeeWfhDetail employeeWfhDetail =
         EmployeeWfhDetail.builder()
-            .employeeId(employeeWfhRequest.getEmployeeId())
-            .wfhType(employeeWfhRequest.getWfhType())
+            .employeeId(employeeWfhData.getEmployeeId())
+            .wfhType(employeeWfhData.getWfhType())
             .status(WfhRequestStatus.PENDING_APPROVAL)
-            .requestedWfhDate(employeeWfhRequest.getRequestedWfhDate())
+            .requestedWfhDate(employeeWfhData.getRequestedWfhDate())
             .build();
 
     employeeWfhDetailRepository.save(employeeWfhDetail);
     return true;
   }
 
-  private boolean validateWfhRequest(EmployeeWfhRequest employeeWfhRequest) {
+  private boolean validateWfhRequest(EmployeeWfhData employeeWfhData) {
 
     List<EmployeeWfhDetail> employeeWfhDetailList =
         employeeWfhDetailRepository.findByEmployeeIdAndWfhType(
-            employeeWfhRequest.getEmployeeId(), employeeWfhRequest.getWfhType());
+            employeeWfhData.getEmployeeId(), employeeWfhData.getWfhType());
 
-    return isWfhForSameDayExist(employeeWfhRequest.getRequestedWfhDate(), employeeWfhDetailList)
-        || isWfhExhausted(employeeWfhRequest, employeeWfhDetailList);
+    return isWfhForSameDayExist(employeeWfhData.getRequestedWfhDate(), employeeWfhDetailList)
+        || isWfhExhausted(employeeWfhData, employeeWfhDetailList);
   }
 
   private boolean isWfhExhausted(
-      EmployeeWfhRequest employeeWfhRequest, List<EmployeeWfhDetail> employeeWfhDetailList) {
+          EmployeeWfhData employeeWfhData, List<EmployeeWfhDetail> employeeWfhDetailList) {
     List<WfhQuantityRef> wfhQuantityRefData = wfhQuantityRefRepository.findAll();
     Map<WfhType, Integer> quantityByWfhTypeMap =
         wfhQuantityRefData.stream()
             .collect(Collectors.toMap(WfhQuantityRef::getWfhType, WfhQuantityRef::getQuantity));
 
-    return quantityByWfhTypeMap.get(employeeWfhRequest.getWfhType())
+    return quantityByWfhTypeMap.get(employeeWfhData.getWfhType())
         > employeeWfhDetailList.stream()
             .filter(
                 employeeWfhDetail ->

@@ -1,14 +1,16 @@
 package com.radz.wfh.controller;
 
 import com.radz.wfh.constant.EmployeeStatus;
-import com.radz.wfh.dto.EmployeeDetailRequest;
-import com.radz.wfh.dto.EmployeeWfhRequest;
+import com.radz.wfh.dto.EmployeeRegistrationRequest;
+import com.radz.wfh.dto.EmployeeWfhData;
 import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.WfhDetailService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/wfh")
 public class WfhController {
@@ -28,16 +30,16 @@ public class WfhController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody EmployeeDetailRequest employeeDetail) {
+  public ResponseEntity<?> register(@Valid @RequestBody EmployeeRegistrationRequest employeeDetail) {
 
     EmployeeStatus registerStatus = employeeRegistrationService.register(employeeDetail);
     return new ResponseEntity<>(registerStatus, HttpStatus.OK);
   }
 
   @PostMapping("/requestWfh")
-  public ResponseEntity<?> requestWfh(@RequestBody EmployeeWfhRequest employeeWfhRequest) {
+  public ResponseEntity<?> requestWfh(@Valid @RequestBody EmployeeWfhData employeeWfhData) {
 
-    boolean req = wfhDetailService.requestWfh(employeeWfhRequest);
+    boolean req = wfhDetailService.requestWfh(employeeWfhData);
     return new ResponseEntity<>(req, HttpStatus.OK);
   }
 }
