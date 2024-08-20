@@ -15,6 +15,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeDetail {
 
   @Id
@@ -37,10 +39,10 @@ public class EmployeeDetail {
   @Enumerated(EnumType.STRING)
   private EmployeeStatus status;
 
-  @OneToMany(mappedBy = "employeeDetail")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
   private List<EmployeeWfhDetail> employeeWfhDetailList;
 
-  @OneToOne(mappedBy = "employeeDetail")
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
   private EmployeeCredential employeeCredential;
 
   @Builder.Default

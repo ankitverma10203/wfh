@@ -10,4 +10,6 @@ public interface EmployeeWfhDetailRepository
     extends JpaRepository<EmployeeWfhDetail, EmployeeWfhDetailId> {
 
   List<EmployeeWfhDetail> findByEmployeeIdAndWfhType(Long employeeId, WfhType wfhType);
+
+  List<EmployeeWfhDetail> findByEmployeeId(Long employeeId);
 }

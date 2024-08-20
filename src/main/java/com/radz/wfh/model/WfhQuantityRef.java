@@ -5,9 +5,8 @@ import com.radz.wfh.constant.WfhType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,13 +15,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "WFH_QUANTITY_REF")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class WfhQuantityRef {
 
   @Enumerated(EnumType.STRING)
   @Id private WfhType wfhType;
 
   @Column(nullable = false)
-  private int quantity;
+  private long quantity;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

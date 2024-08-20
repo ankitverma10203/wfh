@@ -4,12 +4,9 @@ import com.radz.wfh.constant.WfhConstants;
 import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.constant.WfhType;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,20 +15,25 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "EMPLOYEE_WFH_DETAIL")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @IdClass(EmployeeWfhDetailId.class)
 public class EmployeeWfhDetail {
 
   @Id private Long employeeId;
 
   @Enumerated(EnumType.STRING)
-  @Id private WfhType wfhType;
+  @Id
+  private WfhType wfhType;
 
   @Id private LocalDate requestedWfhDate;
 
   @Enumerated(EnumType.STRING)
   private WfhRequestStatus status;
 
-  @ManyToOne private EmployeeDetail employeeDetail;
+//  @JoinColumn(name = "employeeId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private EmployeeDetail employeeDetail;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

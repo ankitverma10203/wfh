@@ -2,11 +2,10 @@ package com.radz.wfh.model;
 
 import com.radz.wfh.constant.WfhConstants;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "EMPLOYEE_CREDENTIAL")
@@ -21,7 +20,9 @@ public class EmployeeCredential {
   @Column(nullable = false)
   private String password;
 
-  @OneToOne private EmployeeDetail employeeDetail;
+  @JoinColumn(name = "employeeId")
+  @OneToOne
+  private EmployeeDetail employeeDetail;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

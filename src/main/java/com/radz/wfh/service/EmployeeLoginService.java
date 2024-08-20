@@ -1,8 +1,8 @@
 package com.radz.wfh.service;
 
-import com.radz.wfh.constant.LoginStatus;
 import com.radz.wfh.dto.EmployeeLoginRequest;
+import com.radz.wfh.dto.LoginResponse;
 
 public interface EmployeeLoginService {
-  LoginStatus login(EmployeeLoginRequest employeeLoginRequest);
+  LoginResponse login(EmployeeLoginRequest employeeLoginRequest);
 }

@@ -1,16 +1,16 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.LoginStatus;
+import com.radz.wfh.constant.WfhConstants;
 import com.radz.wfh.dto.EmployeeLoginRequest;
+import com.radz.wfh.dto.LoginResponse;
 import com.radz.wfh.model.EmployeeCredential;
 import com.radz.wfh.repository.EmployeeCredentialRepository;
-import com.radz.wfh.repository.EmployeeDetailRepository;
+import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.EmployeeLoginService;
 import com.radz.wfh.utility.WfhUtility;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,45 +18,43 @@ import org.springframework.stereotype.Service;
 public class EmployeeLoginServiceImpl implements EmployeeLoginService {
 
   private final EmployeeCredentialRepository employeeCredentialRepository;
-  private final EmployeeDetailRepository employeeDetailRepository;
+  private final EmployeeDetailService employeeDetailService;
 
   public EmployeeLoginServiceImpl(
       EmployeeCredentialRepository employeeCredentialRepository,
-      EmployeeDetailRepository employeeDetailRepository) {
+      EmployeeDetailService employeeDetailService) {
     this.employeeCredentialRepository = employeeCredentialRepository;
-    this.employeeDetailRepository = employeeDetailRepository;
+    this.employeeDetailService = employeeDetailService;
   }
 
   @Override
-  public LoginStatus login(EmployeeLoginRequest employeeLoginRequest) {
+  public LoginResponse login(EmployeeLoginRequest employeeLoginRequest) {
 
-    Optional<Long> employeeId = validateRequestedId(employeeLoginRequest.getId());
+    Optional<Long> employeeId =
+        employeeDetailService.validateRequestedId(employeeLoginRequest.getId());
 
     if (employeeId.isEmpty()) {
-      return LoginStatus.USER_NOT_FOUND;
+      return LoginResponse.builder()
+          .id(WfhConstants.INVALID_EMPLOYEE_ID)
+          .name("")
+          .loginStatus(LoginStatus.USER_NOT_FOUND)
+          .build();
     }
 
-    Optional<EmployeeCredential> optionalEmployeeCredential =
-        employeeCredentialRepository.findById(employeeId.get());
+    EmployeeCredential employeeCredential =
+            employeeCredentialRepository
+                    .getEmployeeDetailAndCredentials(employeeId.get());
 
-    EmployeeCredential employeeCredential = optionalEmployeeCredential.get();
+    LoginStatus loginStatus =
+        WfhUtility.validatePassword(
+                employeeLoginRequest.getPassword(), employeeCredential.getPassword())
+            ? LoginStatus.LOGIN_SUCCESS
+            : LoginStatus.INCORRECT_PASSWORD;
 
-    return WfhUtility.validatePassword(
-            employeeLoginRequest.getPassword(), employeeCredential.getPassword())
-        ? LoginStatus.LOGIN_SUCCESS
-        : LoginStatus.INCORRECT_PASSWORD;
-  }
-
-  private Optional<Long> validateRequestedId(String requestedId) {
-    if (StringUtils.isNumeric(requestedId)) {
-      Long employeeId = Long.parseLong(requestedId);
-      return employeeDetailRepository.existsById(employeeId)
-          ? Optional.of(employeeId)
-          : Optional.empty();
-    }
-
-    Long employeeId = employeeDetailRepository.getEmployeeIdByEmail(requestedId);
-
-    return Objects.nonNull(employeeId) ? Optional.of(employeeId) : Optional.empty();
+    return LoginResponse.builder()
+        .loginStatus(loginStatus)
+        .name(employeeCredential.getEmployeeDetail().getName())
+        .id(employeeCredential.getEmployeeId())
+        .build();
   }
 }
