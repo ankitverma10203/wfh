@@ -12,5 +12,6 @@ public class EmployeeDetailData {
     private String name;
     private Role role;
     private String email;
+    private Long managerId;
     private EmployeeStatus employeeStatus;
 }

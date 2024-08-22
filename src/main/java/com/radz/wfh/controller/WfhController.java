@@ -2,6 +2,7 @@ package com.radz.wfh.controller;
 
 import com.radz.wfh.constant.EmployeeStatus;
 import com.radz.wfh.dto.*;
+import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.EmployeeLoginService;
 import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.WfhDetailService;
@@ -18,14 +19,17 @@ public class WfhController {
   private final WfhDetailService wfhDetailService;
   private final EmployeeRegistrationService employeeRegistrationService;
   private final EmployeeLoginService employeeLoginService;
+  private final EmployeeDetailService employeeDetailService;
 
   public WfhController(
       WfhDetailService wfhDetailService,
       EmployeeRegistrationService employeeRegistrationService,
-      EmployeeLoginService employeeLoginService) {
+      EmployeeLoginService employeeLoginService,
+      EmployeeDetailService employeeDetailService) {
     this.wfhDetailService = wfhDetailService;
     this.employeeRegistrationService = employeeRegistrationService;
     this.employeeLoginService = employeeLoginService;
+    this.employeeDetailService = employeeDetailService;
   }
 
   @PostMapping("/register")
@@ -58,5 +62,23 @@ public class WfhController {
   @GetMapping("/getEmployeeWfhBalance/{employeeId}")
   public ResponseEntity<?> getEmployeeWfhBalance(@PathVariable("employeeId") Long employeeId) {
     return new ResponseEntity<>(wfhDetailService.getEmployeeWfhBalance(employeeId), HttpStatus.OK);
+  }
+
+  @GetMapping("/getPendingEmployeeRegistration")
+  public ResponseEntity<?> getEmployeeWfhBalance() {
+    return new ResponseEntity<>(
+        employeeDetailService.getPendingRegisterRequestList(), HttpStatus.OK);
+  }
+
+  @GetMapping("/getManagers")
+  public ResponseEntity<?> getManagers() {
+    return new ResponseEntity<>(employeeDetailService.getManagerDetails(), HttpStatus.OK);
+  }
+
+  @PostMapping("/updateEmployeeData")
+  public ResponseEntity<?> requestWfh(@Valid @RequestBody EmployeeDetailData employeeDetailData) {
+
+    boolean isUpdateSuccessful = employeeDetailService.updateEmployeeDetail(employeeDetailData);
+    return new ResponseEntity<>(isUpdateSuccessful, HttpStatus.OK);
   }
 }

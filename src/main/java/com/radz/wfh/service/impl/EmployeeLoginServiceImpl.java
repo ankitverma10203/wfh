@@ -42,8 +42,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
     }
 
     EmployeeCredential employeeCredential =
-            employeeCredentialRepository
-                    .getEmployeeDetailAndCredentials(employeeId.get());
+        employeeCredentialRepository.getEmployeeDetailAndCredentials(employeeId.get());
 
     LoginStatus loginStatus =
         WfhUtility.validatePassword(
@@ -55,6 +54,7 @@ public class EmployeeLoginServiceImpl implements EmployeeLoginService {
         .loginStatus(loginStatus)
         .name(employeeCredential.getEmployeeDetail().getName())
         .id(employeeCredential.getEmployeeId())
+        .role(employeeCredential.getEmployeeDetail().getRole())
         .build();
   }
 }
