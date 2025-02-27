@@ -20,7 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @IdClass(EmployeeWfhDetailId.class)
 public class EmployeeWfhDetail {
 
-  @Id private Long employeeId;
+  @Id private String employeeId;
 
   @Enumerated(EnumType.STRING)
   @Id

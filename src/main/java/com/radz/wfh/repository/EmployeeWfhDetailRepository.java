@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EmployeeWfhDetailRepository
     extends JpaRepository<EmployeeWfhDetail, EmployeeWfhDetailId> {
 
-  List<EmployeeWfhDetail> findByEmployeeIdAndWfhType(Long employeeId, WfhType wfhType);
+  List<EmployeeWfhDetail> findByEmployeeIdAndWfhType(String employeeId, WfhType wfhType);
 
-  List<EmployeeWfhDetail> findByEmployeeId(Long employeeId);
+  List<EmployeeWfhDetail> findByEmployeeId(String employeeId);
 }

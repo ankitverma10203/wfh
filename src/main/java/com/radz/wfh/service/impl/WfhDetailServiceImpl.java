@@ -8,7 +8,6 @@ import com.radz.wfh.dto.WfhBalanceInfo;
 import com.radz.wfh.dto.WfhResponse;
 import com.radz.wfh.model.EmployeeWfhDetail;
 import com.radz.wfh.repository.EmployeeWfhDetailRepository;
-import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.WfhDetailService;
 import com.radz.wfh.service.WfhQuantityRefService;
 import java.time.LocalDate;
@@ -23,21 +22,18 @@ public class WfhDetailServiceImpl implements WfhDetailService {
 
   private final EmployeeWfhDetailRepository employeeWfhDetailRepository;
   private final WfhQuantityRefService wfhQuantityRefService;
-  private final EmployeeDetailService employeeDetailService;
 
-  public WfhDetailServiceImpl(
+    public WfhDetailServiceImpl(
       EmployeeWfhDetailRepository employeeWfhDetailRepository,
-      WfhQuantityRefService wfhQuantityRefService,
-      EmployeeDetailService employeeDetailService) {
+      WfhQuantityRefService wfhQuantityRefService) {
     this.employeeWfhDetailRepository = employeeWfhDetailRepository;
     this.wfhQuantityRefService = wfhQuantityRefService;
-    this.employeeDetailService = employeeDetailService;
-  }
+    }
 
   @Override
-  public WfhResponse requestWfh(EmployeeWfhData employeeWfhData) {
+  public WfhResponse requestWfh(String employeeId, EmployeeWfhData employeeWfhData) {
 
-    Optional<WfhRequestStatus> optionalWfhRequestStatus = validateWfhRequest(employeeWfhData);
+    Optional<WfhRequestStatus> optionalWfhRequestStatus = validateWfhRequest(employeeId, employeeWfhData);
 
     if (optionalWfhRequestStatus.isPresent()) {
       return WfhResponse.builder().status(optionalWfhRequestStatus.get()).build();
@@ -46,7 +42,7 @@ public class WfhDetailServiceImpl implements WfhDetailService {
     WfhRequestStatus wfhRequestStatus = WfhRequestStatus.PENDING_APPROVAL;
     EmployeeWfhDetail employeeWfhDetail =
         EmployeeWfhDetail.builder()
-            .employeeId(employeeWfhData.getEmployeeId())
+            .employeeId(employeeId)
             .wfhType(employeeWfhData.getWfhType())
             .status(wfhRequestStatus)
             .requestedWfhDate(employeeWfhData.getRequestedWfhDate())
@@ -56,16 +52,9 @@ public class WfhDetailServiceImpl implements WfhDetailService {
     return WfhResponse.builder().successFlg(true).status(wfhRequestStatus).build();
   }
 
-  private Optional<WfhRequestStatus> validateWfhRequest(EmployeeWfhData employeeWfhData) {
-
-    if (employeeDetailService
-        .validateRequestedId(employeeWfhData.getEmployeeId().toString())
-        .isEmpty()) {
-      return Optional.of(WfhRequestStatus.INVALID_REQUEST);
-    }
-
+  private Optional<WfhRequestStatus> validateWfhRequest(String employeeId, EmployeeWfhData employeeWfhData) {
     List<EmployeeWfhDetail> employeeWfhDetailList =
-        employeeWfhDetailRepository.findByEmployeeId(employeeWfhData.getEmployeeId());
+        employeeWfhDetailRepository.findByEmployeeId(employeeId);
 
     if (isWfhForSameDayExist(employeeWfhData.getRequestedWfhDate(), employeeWfhDetailList)) {
       return Optional.of(WfhRequestStatus.DUPLICATE_REQUEST);
@@ -102,7 +91,7 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   }
 
   @Override
-  public List<EmployeeWfhDetailData> getEmployeeWfhDetail(Long employeeId) {
+  public List<EmployeeWfhDetailData> getEmployeeWfhDetail(String employeeId) {
     List<EmployeeWfhDetail> employeeWfhDetailList =
         employeeWfhDetailRepository.findByEmployeeId(employeeId);
 
@@ -120,7 +109,7 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   }
 
   @Override
-  public WfhBalanceInfo getEmployeeWfhBalance(Long employeeId) {
+  public WfhBalanceInfo getEmployeeWfhBalance(String employeeId) {
     Map<WfhType, Long> quantityByWfhTypeMap = wfhQuantityRefService.getQuantityByWfhTypeMap();
 
     List<EmployeeWfhDetail> employeeWfhDetailList =

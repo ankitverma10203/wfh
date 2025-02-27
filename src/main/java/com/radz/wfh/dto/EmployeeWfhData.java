@@ -11,7 +11,6 @@ import lombok.Data;
 @Builder
 @Data
 public class EmployeeWfhData {
-  @NotNull private Long employeeId;
   @NotNull private WfhType wfhType;
 
   @JsonFormat(pattern = "yyyy-MM-dd")

@@ -1,71 +1,50 @@
 package com.radz.wfh.controller;
 
-import com.radz.wfh.constant.EmployeeStatus;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.service.EmployeeDetailService;
-import com.radz.wfh.service.EmployeeLoginService;
-import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.WfhDetailService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/wfh")
 public class WfhController {
 
   private final WfhDetailService wfhDetailService;
-  private final EmployeeRegistrationService employeeRegistrationService;
-  private final EmployeeLoginService employeeLoginService;
   private final EmployeeDetailService employeeDetailService;
 
   public WfhController(
-      WfhDetailService wfhDetailService,
-      EmployeeRegistrationService employeeRegistrationService,
-      EmployeeLoginService employeeLoginService,
-      EmployeeDetailService employeeDetailService) {
+      WfhDetailService wfhDetailService, EmployeeDetailService employeeDetailService) {
     this.wfhDetailService = wfhDetailService;
-    this.employeeRegistrationService = employeeRegistrationService;
-    this.employeeLoginService = employeeLoginService;
     this.employeeDetailService = employeeDetailService;
-  }
-
-  @PostMapping("/register")
-  public ResponseEntity<?> register(
-      @Valid @RequestBody EmployeeRegistrationRequest employeeDetail) {
-
-    EmployeeStatus registerStatus = employeeRegistrationService.register(employeeDetail);
-    return new ResponseEntity<>(registerStatus, HttpStatus.OK);
-  }
-
-  @PostMapping("/login")
-  public ResponseEntity<?> login(@Valid @RequestBody EmployeeLoginRequest employeeLoginRequest) {
-
-    LoginResponse loginResponse = employeeLoginService.login(employeeLoginRequest);
-    return new ResponseEntity<>(loginResponse, HttpStatus.OK);
   }
 
   @PostMapping("/requestWfh")
   public ResponseEntity<?> requestWfh(@Valid @RequestBody EmployeeWfhData employeeWfhData) {
-
-    WfhResponse wfhResponse = wfhDetailService.requestWfh(employeeWfhData);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    WfhResponse wfhResponse = wfhDetailService.requestWfh(authentication.getName(), employeeWfhData);
     return new ResponseEntity<>(wfhResponse, HttpStatus.OK);
   }
 
-  @GetMapping("/getEmployeeWfhDetail/{employeeId}")
-  public ResponseEntity<?> getEmployeeWfhDetail(@PathVariable("employeeId") Long employeeId) {
-    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhDetail(employeeId), HttpStatus.OK);
+  @GetMapping("/getEmployeeWfhDetail")
+  public ResponseEntity<?> getEmployeeWfhDetail() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhDetail(authentication.getName()), HttpStatus.OK);
   }
 
-  @GetMapping("/getEmployeeWfhBalance/{employeeId}")
-  public ResponseEntity<?> getEmployeeWfhBalance(@PathVariable("employeeId") Long employeeId) {
-    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhBalance(employeeId), HttpStatus.OK);
+  @GetMapping("/getEmployeeWfhBalance")
+  public ResponseEntity<?> getEmployeeWfhBalance() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhBalance(authentication.getName()), HttpStatus.OK);
   }
 
   @GetMapping("/getPendingEmployeeRegistration")
-  public ResponseEntity<?> getEmployeeWfhBalance() {
+  public ResponseEntity<?> getPendingEmployeeRegistration() {
     return new ResponseEntity<>(
         employeeDetailService.getPendingRegisterRequestList(), HttpStatus.OK);
   }

@@ -20,14 +20,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class EmployeeDetail {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long employeeId;
+  private String employeeId;
 
   @Column(nullable = false)
   private String name;
-
-  @Column(nullable = false)
-  private Role role;
 
   @Column(nullable = false, unique = true)
   private String email;
@@ -41,9 +37,6 @@ public class EmployeeDetail {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
   private List<EmployeeWfhDetail> employeeWfhDetailList;
-
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
-  private EmployeeCredential employeeCredential;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

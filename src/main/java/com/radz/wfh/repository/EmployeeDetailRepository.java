@@ -8,14 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface EmployeeDetailRepository extends JpaRepository<EmployeeDetail, Long> {
-
-  int countByRole(Role role);
+public interface EmployeeDetailRepository extends JpaRepository<EmployeeDetail, String> {
 
   List<EmployeeDetail> findByStatus(EmployeeStatus employeeStatus);
 
   @Query("select e.employeeId from EmployeeDetail e where e.email = :email")
   Long getEmployeeIdByEmail(@Param("email") String email);
-
-  List<EmployeeDetail> findByStatusAndRole(EmployeeStatus employeeStatus, Role role);
 }

@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface WfhDetailService {
 
-  WfhResponse requestWfh(EmployeeWfhData employeeWfhData);
+  WfhResponse requestWfh(String name, EmployeeWfhData employeeWfhData);
 
-  List<EmployeeWfhDetailData> getEmployeeWfhDetail(Long employeeId);
+  List<EmployeeWfhDetailData> getEmployeeWfhDetail(String employeeId);
 
-  WfhBalanceInfo getEmployeeWfhBalance(Long employeeId);
+  WfhBalanceInfo getEmployeeWfhBalance(String employeeId);
 }
