@@ -26,18 +26,7 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     List<EmployeeDetail> pendingRegistrationList =
         employeeDetailRepository.findByStatus(EmployeeStatus.PENDING_APPROVAL);
 
-    return pendingRegistrationList.stream()
-        .map(
-            pendingRegistration ->
-                EmployeeDetailData.builder()
-                    .employeeId(pendingRegistration.getEmployeeId())
-                    .employeeStatus(pendingRegistration.getStatus())
-                    .name(pendingRegistration.getName())
-                    .email(pendingRegistration.getEmail())
-                    .managerId(pendingRegistration.getManagerId())
-                    .role(pendingRegistration.getRole())
-                    .build())
-        .toList();
+    return createEmployeeDetailDataList(pendingRegistrationList);
   }
 
   @Override
@@ -46,6 +35,19 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     List<EmployeeDetail> managerDetails =
         employeeDetailRepository.getEmployeesByRoleAndStatus(Role.MANAGER, EmployeeStatus.ACTIVE);
 
+    return createEmployeeDetailDataList(managerDetails);
+  }
+
+  @Override
+  public List<EmployeeDetailData> getAdminDetails() {
+    List<EmployeeDetail> managerDetails =
+        employeeDetailRepository.getEmployeesByRoleAndStatus(Role.ADMIN, EmployeeStatus.ACTIVE);
+
+    return createEmployeeDetailDataList(managerDetails);
+  }
+
+  private List<EmployeeDetailData> createEmployeeDetailDataList(
+      List<EmployeeDetail> managerDetails) {
     return managerDetails.stream()
         .map(
             managerDetail ->

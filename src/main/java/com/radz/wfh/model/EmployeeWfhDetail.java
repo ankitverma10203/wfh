@@ -12,26 +12,36 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Builder
 @Entity
-@Table(name = "EMPLOYEE_WFH_DETAIL")
+@Table(
+    name = "EMPLOYEE_WFH_DETAIL",
+    uniqueConstraints = {
+      @UniqueConstraint(columnNames = {"employeeId", "wfhType", "requestedWfhDate"})
+    })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@IdClass(EmployeeWfhDetailId.class)
 public class EmployeeWfhDetail {
 
-  @Id private String employeeId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long wfhRequestId;
+
+  private String employeeId;
 
   @Enumerated(EnumType.STRING)
-  @Id
   private WfhType wfhType;
 
-  @Id private LocalDate requestedWfhDate;
+  private LocalDate requestedWfhDate;
 
   @Enumerated(EnumType.STRING)
   private WfhRequestStatus status;
 
-  @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
+  @JoinColumn(
+      name = "employeeId",
+      referencedColumnName = "employeeId",
+      insertable = false,
+      updatable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private EmployeeDetail employeeDetail;
 

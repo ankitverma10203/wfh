@@ -8,6 +8,7 @@ import com.radz.wfh.repository.EmployeeWfhDetailRepository;
 import com.radz.wfh.service.WfhDetailService;
 import com.radz.wfh.service.WfhQuantityRefService;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -94,15 +95,19 @@ public class WfhDetailServiceImpl implements WfhDetailService {
     List<EmployeeWfhDetail> employeeWfhDetailList =
         employeeWfhDetailRepository.findByEmployeeId(employeeId);
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss");
+
     return employeeWfhDetailList.stream()
         .map(
             employeeWfhDetail ->
                 EmployeeWfhDetailData.builder()
+                    .wfhRequestId(employeeWfhDetail.getWfhRequestId())
                     .wfhType(employeeWfhDetail.getWfhType())
-                    .requestedWfhDate(employeeWfhDetail.getRequestedWfhDate())
+                    .requestedWfhDate(
+                        employeeWfhDetail.getRequestedWfhDate().format(DateTimeFormatter.ISO_DATE))
                     .status(employeeWfhDetail.getStatus())
-                    .createdTimestamp(employeeWfhDetail.getCreatedTimestamp())
-                    .updatedTimestamp(employeeWfhDetail.getUpdatedTimestamp())
+                    .createdTimestamp(employeeWfhDetail.getCreatedTimestamp().format(formatter))
+                    .updatedTimestamp(employeeWfhDetail.getUpdatedTimestamp().format(formatter))
                     .build())
         .toList();
   }
@@ -177,12 +182,14 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   @Override
   public List<EmployeeWfhApprovalData> getEmployeePendingWfhRequests(String approverId) {
     List<EmployeeWfhDetail> pendingWfhRequests =
-        employeeWfhDetailRepository.getWfhRequestsByStatus(WfhRequestStatus.PENDING_APPROVAL);
+        employeeWfhDetailRepository.getWfhRequestsByStatus(
+            approverId, WfhRequestStatus.PENDING_APPROVAL);
 
     return pendingWfhRequests.stream()
         .map(
             employeeWfhDetail ->
                 EmployeeWfhApprovalData.builder()
+                    .wfhRequestId(employeeWfhDetail.getWfhRequestId())
                     .name(employeeWfhDetail.getEmployeeDetail().getName())
                     .email(employeeWfhDetail.getEmployeeDetail().getEmail())
                     .employeeId(employeeWfhDetail.getEmployeeId())
@@ -191,5 +198,13 @@ public class WfhDetailServiceImpl implements WfhDetailService {
                     .status(employeeWfhDetail.getStatus())
                     .build())
         .toList();
+  }
+
+  @Override
+  public WfhRequestStatus updateEmployeeWfhRequest(
+      Long wfhRequestId, WfhRequestStatus wfhRequestStatus) {
+
+    employeeWfhDetailRepository.updateWfhRequestStatus(wfhRequestId, wfhRequestStatus);
+    return wfhRequestStatus;
   }
 }

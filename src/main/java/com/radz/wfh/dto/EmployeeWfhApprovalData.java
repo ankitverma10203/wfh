@@ -1,5 +1,6 @@
 package com.radz.wfh.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.constant.WfhType;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeWfhApprovalData {
+  @JsonProperty("id")
+  private Long wfhRequestId;
+
   private String employeeId;
   private String name;
   private String email;

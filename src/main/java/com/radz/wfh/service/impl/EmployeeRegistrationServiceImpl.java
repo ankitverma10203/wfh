@@ -29,6 +29,7 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
     EmployeeStatus status =
         isEmployeeDetailTableEmpty ? EmployeeStatus.ACTIVE : EmployeeStatus.PENDING_APPROVAL;
     Role role = isEmployeeDetailTableEmpty ? Role.ADMIN : Role.EMPLOYEE;
+    String managerId = isEmployeeDetailTableEmpty ? employeeInfo.getSub() : "0";
 
     EmployeeDetail employeeDetail =
         EmployeeDetail.builder()
@@ -37,6 +38,7 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
             .email(employeeInfo.getEmail())
             .status(status)
             .role(role)
+            .managerId(managerId)
             .build();
 
     employeeDetailRepository.save(employeeDetail);

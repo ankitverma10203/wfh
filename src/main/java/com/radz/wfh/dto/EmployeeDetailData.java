@@ -1,5 +1,6 @@
 package com.radz.wfh.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.radz.wfh.constant.EmployeeStatus;
 import com.radz.wfh.constant.Role;
 import lombok.AllArgsConstructor;
@@ -12,10 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDetailData {
-    private String employeeId;
-    private String name;
-    private Role role;
-    private String email;
-    private String managerId;
-    private EmployeeStatus employeeStatus;
+  @JsonProperty("id")
+  private String employeeId;
+
+  private String name;
+  private Role role;
+  private String email;
+  private String managerId;
+  private EmployeeStatus employeeStatus;
 }

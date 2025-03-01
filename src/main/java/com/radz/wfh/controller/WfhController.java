@@ -1,5 +1,6 @@
 package com.radz.wfh.controller;
 
+import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.WfhDetailService;
@@ -57,6 +58,11 @@ public class WfhController {
     return new ResponseEntity<>(employeeDetailService.getManagerDetails(), HttpStatus.OK);
   }
 
+  @GetMapping("/getAdmins")
+  public ResponseEntity<?> getAdmins() {
+    return new ResponseEntity<>(employeeDetailService.getAdminDetails(), HttpStatus.OK);
+  }
+
   @GetMapping("/getEmployeePendingWfhRequests")
   public ResponseEntity<?> getEmployeePendingWfhRequests() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,6 +81,15 @@ public class WfhController {
   @GetMapping("/getEmployeeData")
   public ResponseEntity<?> getEmployeeDetail() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return new ResponseEntity<>(employeeDetailService.getEmployeeDetail(authentication.getName()), HttpStatus.OK);
+    return new ResponseEntity<>(
+        employeeDetailService.getEmployeeDetail(authentication.getName()), HttpStatus.OK);
+  }
+
+  @PostMapping("/updateWfhRequestStatus")
+  public ResponseEntity<?> updateWfhRequestStatus(
+      @RequestParam("wfhRequestId") Long wfhRequestId,
+      @RequestParam("status") WfhRequestStatus status) {
+    return new ResponseEntity<>(
+        wfhDetailService.updateEmployeeWfhRequest(wfhRequestId, status), HttpStatus.OK);
   }
 }

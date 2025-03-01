@@ -10,6 +10,8 @@ public interface EmployeeDetailService {
 
   List<EmployeeDetailData> getManagerDetails();
 
+  List<EmployeeDetailData> getAdminDetails();
+
   boolean updateEmployeeDetail(@Valid EmployeeDetailData employeeDetailData);
 
   EmployeeDetailData getEmployeeDetail(String requestedId);
