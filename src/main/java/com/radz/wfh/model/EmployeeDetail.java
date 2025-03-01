@@ -20,30 +20,26 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class EmployeeDetail {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long employeeId;
+  private String employeeId;
 
   @Column(nullable = false)
   private String name;
 
   @Column(nullable = false)
-  private Role role;
-
-  @Column(nullable = false, unique = true)
   private String email;
 
   @Builder.Default
   @Column(nullable = false)
-  private Long managerId = 0L;
+  private String managerId = "0";
 
   @Enumerated(EnumType.STRING)
   private EmployeeStatus status;
 
+  @Enumerated(EnumType.STRING)
+  private Role role;
+
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
   private List<EmployeeWfhDetail> employeeWfhDetailList;
-
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
-  private EmployeeCredential employeeCredential;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

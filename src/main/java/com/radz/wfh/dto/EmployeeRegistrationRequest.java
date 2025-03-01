@@ -13,8 +13,5 @@ public class EmployeeRegistrationRequest {
   @Size(min = 5)
   private String email;
 
-  @NotNull private Role role;
-
-  @Size(min = 5)
-  private String password;
+  private Role role;
 }

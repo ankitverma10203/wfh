@@ -1,8 +1,9 @@
 package com.radz.wfh.service;
 
 import com.radz.wfh.constant.EmployeeStatus;
-import com.radz.wfh.dto.EmployeeRegistrationRequest;
+import com.radz.wfh.dto.EmployeeInfo;
 
 public interface EmployeeRegistrationService {
-  EmployeeStatus register(EmployeeRegistrationRequest employeeDetail);
+
+  EmployeeStatus register(EmployeeInfo employeeInfo);
 }
