@@ -20,7 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @IdClass(EmployeeWfhDetailId.class)
 public class EmployeeWfhDetail {
 
-  @Id private Long employeeId;
+  @Id private String employeeId;
 
   @Enumerated(EnumType.STRING)
   @Id
@@ -31,7 +31,7 @@ public class EmployeeWfhDetail {
   @Enumerated(EnumType.STRING)
   private WfhRequestStatus status;
 
-//  @JoinColumn(name = "employeeId")
+  @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private EmployeeDetail employeeDetail;
 

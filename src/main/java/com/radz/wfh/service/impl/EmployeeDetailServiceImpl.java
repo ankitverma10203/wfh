@@ -7,10 +7,8 @@ import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,13 +22,6 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
   }
 
   @Override
-  public boolean doesAdminExist() {
-    int countOfAdmins = employeeDetailRepository.countByRole(Role.ADMIN);
-
-    return countOfAdmins > 0;
-  }
-
-  @Override
   public List<EmployeeDetailData> getPendingRegisterRequestList() {
     List<EmployeeDetail> pendingRegistrationList =
         employeeDetailRepository.findByStatus(EmployeeStatus.PENDING_APPROVAL);
@@ -41,32 +32,19 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                 EmployeeDetailData.builder()
                     .employeeId(pendingRegistration.getEmployeeId())
                     .employeeStatus(pendingRegistration.getStatus())
-                    .role(pendingRegistration.getRole())
                     .name(pendingRegistration.getName())
                     .email(pendingRegistration.getEmail())
                     .managerId(pendingRegistration.getManagerId())
+                    .role(pendingRegistration.getRole())
                     .build())
         .toList();
   }
 
   @Override
-  public Optional<Long> validateRequestedId(String requestedId) {
-    if (StringUtils.isNumeric(requestedId)) {
-      Long employeeId = Long.parseLong(requestedId);
-      return employeeDetailRepository.existsById(employeeId)
-          ? Optional.of(employeeId)
-          : Optional.empty();
-    }
-
-    Long employeeId = employeeDetailRepository.getEmployeeIdByEmail(requestedId);
-
-    return Objects.nonNull(employeeId) ? Optional.of(employeeId) : Optional.empty();
-  }
-
-  @Override
   public List<EmployeeDetailData> getManagerDetails() {
+
     List<EmployeeDetail> managerDetails =
-        employeeDetailRepository.findByStatusAndRole(EmployeeStatus.ACTIVE, Role.MANAGER);
+        employeeDetailRepository.getEmployeesByRoleAndStatus(Role.MANAGER, EmployeeStatus.ACTIVE);
 
     return managerDetails.stream()
         .map(
@@ -74,10 +52,10 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                 EmployeeDetailData.builder()
                     .employeeId(managerDetail.getEmployeeId())
                     .employeeStatus(managerDetail.getStatus())
-                    .role(managerDetail.getRole())
                     .name(managerDetail.getName())
                     .email(managerDetail.getEmail())
                     .managerId(managerDetail.getManagerId())
+                    .role(managerDetail.getRole())
                     .build())
         .toList();
   }
@@ -93,10 +71,29 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     }
 
     EmployeeDetail employeeDetail = optionalEmployeeDetail.get();
-    employeeDetail.setRole(employeeDetailData.getRole());
     employeeDetail.setStatus(employeeDetailData.getEmployeeStatus());
     employeeDetail.setManagerId(employeeDetailData.getManagerId());
+    employeeDetail.setRole(employeeDetailData.getRole());
     employeeDetailRepository.save(employeeDetail);
     return true;
+  }
+
+  @Override
+  public EmployeeDetailData getEmployeeDetail(String requestedId) {
+    Optional<EmployeeDetail> employeeDetailOptional =
+        employeeDetailRepository.findById(requestedId);
+
+    return employeeDetailOptional
+        .map(
+            employeeDetail ->
+                EmployeeDetailData.builder()
+                    .employeeId(employeeDetail.getEmployeeId())
+                    .employeeStatus(employeeDetail.getStatus())
+                    .name(employeeDetail.getName())
+                    .email(employeeDetail.getEmail())
+                    .managerId(employeeDetail.getManagerId())
+                    .role(employeeDetail.getRole())
+                    .build())
+        .orElse(EmployeeDetailData.builder().build());
   }
 }
