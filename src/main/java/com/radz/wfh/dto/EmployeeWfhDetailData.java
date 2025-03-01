@@ -1,5 +1,6 @@
 package com.radz.wfh.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -16,6 +17,9 @@ import lombok.Data;
 @Builder
 @Data
 public class EmployeeWfhDetailData {
+
+  @JsonProperty("id")
+  private Long wfhRequestId;
 
   private WfhType wfhType;
 

@@ -98,6 +98,7 @@ public class WfhDetailServiceImpl implements WfhDetailService {
         .map(
             employeeWfhDetail ->
                 EmployeeWfhDetailData.builder()
+                    .wfhRequestId(employeeWfhDetail.getWfhRequestId())
                     .wfhType(employeeWfhDetail.getWfhType())
                     .requestedWfhDate(employeeWfhDetail.getRequestedWfhDate())
                     .status(employeeWfhDetail.getStatus())
@@ -177,7 +178,8 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   @Override
   public List<EmployeeWfhApprovalData> getEmployeePendingWfhRequests(String approverId) {
     List<EmployeeWfhDetail> pendingWfhRequests =
-        employeeWfhDetailRepository.getWfhRequestsByStatus(approverId, WfhRequestStatus.PENDING_APPROVAL);
+        employeeWfhDetailRepository.getWfhRequestsByStatus(
+            approverId, WfhRequestStatus.PENDING_APPROVAL);
 
     return pendingWfhRequests.stream()
         .map(
