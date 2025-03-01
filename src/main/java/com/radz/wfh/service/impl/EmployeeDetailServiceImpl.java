@@ -1,11 +1,11 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.EmployeeStatus;
+import com.radz.wfh.constant.Role;
 import com.radz.wfh.dto.EmployeeDetailData;
 import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,9 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
 
   private final EmployeeDetailRepository employeeDetailRepository;
 
-    public EmployeeDetailServiceImpl(
-      EmployeeDetailRepository employeeDetailRepository) {
+  public EmployeeDetailServiceImpl(EmployeeDetailRepository employeeDetailRepository) {
     this.employeeDetailRepository = employeeDetailRepository;
-    }
+  }
 
   @Override
   public List<EmployeeDetailData> getPendingRegisterRequestList() {
@@ -36,14 +35,16 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                     .name(pendingRegistration.getName())
                     .email(pendingRegistration.getEmail())
                     .managerId(pendingRegistration.getManagerId())
+                    .role(pendingRegistration.getRole())
                     .build())
         .toList();
   }
 
   @Override
   public List<EmployeeDetailData> getManagerDetails() {
-    List<EmployeeDetail> managerDetails = new ArrayList<>();
-    //        employeeDetailRepository.findByStatusAndRole(EmployeeStatus.ACTIVE, Role.MANAGER);
+
+    List<EmployeeDetail> managerDetails =
+        employeeDetailRepository.getEmployeesByRoleAndStatus(Role.MANAGER, EmployeeStatus.ACTIVE);
 
     return managerDetails.stream()
         .map(
@@ -54,6 +55,7 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                     .name(managerDetail.getName())
                     .email(managerDetail.getEmail())
                     .managerId(managerDetail.getManagerId())
+                    .role(managerDetail.getRole())
                     .build())
         .toList();
   }
@@ -71,12 +73,27 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     EmployeeDetail employeeDetail = optionalEmployeeDetail.get();
     employeeDetail.setStatus(employeeDetailData.getEmployeeStatus());
     employeeDetail.setManagerId(employeeDetailData.getManagerId());
+    employeeDetail.setRole(employeeDetailData.getRole());
     employeeDetailRepository.save(employeeDetail);
     return true;
   }
 
   @Override
-  public Optional<EmployeeDetail> getEmployeeDetail(String requestedId) {
-    return employeeDetailRepository.findById(requestedId);
+  public EmployeeDetailData getEmployeeDetail(String requestedId) {
+    Optional<EmployeeDetail> employeeDetailOptional =
+        employeeDetailRepository.findById(requestedId);
+
+    return employeeDetailOptional
+        .map(
+            employeeDetail ->
+                EmployeeDetailData.builder()
+                    .employeeId(employeeDetail.getEmployeeId())
+                    .employeeStatus(employeeDetail.getStatus())
+                    .name(employeeDetail.getName())
+                    .email(employeeDetail.getEmail())
+                    .managerId(employeeDetail.getManagerId())
+                    .role(employeeDetail.getRole())
+                    .build())
+        .orElse(EmployeeDetailData.builder().build());
   }
 }

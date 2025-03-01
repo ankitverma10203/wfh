@@ -14,4 +14,6 @@ public interface EmployeeDetailRepository extends JpaRepository<EmployeeDetail, 
 
   @Query("select e.employeeId from EmployeeDetail e where e.email = :email")
   Long getEmployeeIdByEmail(@Param("email") String email);
+
+  List<EmployeeDetail> getEmployeesByRoleAndStatus(Role role, EmployeeStatus employeeStatus);
 }

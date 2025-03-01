@@ -31,7 +31,7 @@ public class EmployeeWfhDetail {
   @Enumerated(EnumType.STRING)
   private WfhRequestStatus status;
 
-//  @JoinColumn(name = "employeeId")
+  @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private EmployeeDetail employeeDetail;
 

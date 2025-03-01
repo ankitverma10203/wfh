@@ -8,9 +8,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.security.sasl.AuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -38,15 +39,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     if (StringUtils.isNotBlank(token)) {
       try {
-        EmployeeInfo employeeInfo = auth0Service.getUserInfo(token);
-        log.info("UserInfo: {}", employeeInfo);
-        boolean isRegisteredUser = employeeDetailRepository.existsById(employeeInfo.getSub());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isRegisteredUser = employeeDetailRepository.existsById(authentication.getName());
 
         if (!isRegisteredUser) {
+          EmployeeInfo employeeInfo = auth0Service.getUserInfo(token);
           employeeRegistrationService.register(employeeInfo);
         }
       } catch (Exception e) {
-        throw new AuthenticationException(e.getMessage(), e);
+        log.error(e.getMessage());
       }
     }
     filterChain.doFilter(request, response);

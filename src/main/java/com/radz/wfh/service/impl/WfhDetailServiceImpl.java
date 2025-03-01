@@ -2,10 +2,7 @@ package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.constant.WfhType;
-import com.radz.wfh.dto.EmployeeWfhData;
-import com.radz.wfh.dto.EmployeeWfhDetailData;
-import com.radz.wfh.dto.WfhBalanceInfo;
-import com.radz.wfh.dto.WfhResponse;
+import com.radz.wfh.dto.*;
 import com.radz.wfh.model.EmployeeWfhDetail;
 import com.radz.wfh.repository.EmployeeWfhDetailRepository;
 import com.radz.wfh.service.WfhDetailService;
@@ -23,17 +20,18 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   private final EmployeeWfhDetailRepository employeeWfhDetailRepository;
   private final WfhQuantityRefService wfhQuantityRefService;
 
-    public WfhDetailServiceImpl(
+  public WfhDetailServiceImpl(
       EmployeeWfhDetailRepository employeeWfhDetailRepository,
       WfhQuantityRefService wfhQuantityRefService) {
     this.employeeWfhDetailRepository = employeeWfhDetailRepository;
     this.wfhQuantityRefService = wfhQuantityRefService;
-    }
+  }
 
   @Override
   public WfhResponse requestWfh(String employeeId, EmployeeWfhData employeeWfhData) {
 
-    Optional<WfhRequestStatus> optionalWfhRequestStatus = validateWfhRequest(employeeId, employeeWfhData);
+    Optional<WfhRequestStatus> optionalWfhRequestStatus =
+        validateWfhRequest(employeeId, employeeWfhData);
 
     if (optionalWfhRequestStatus.isPresent()) {
       return WfhResponse.builder().status(optionalWfhRequestStatus.get()).build();
@@ -52,7 +50,8 @@ public class WfhDetailServiceImpl implements WfhDetailService {
     return WfhResponse.builder().successFlg(true).status(wfhRequestStatus).build();
   }
 
-  private Optional<WfhRequestStatus> validateWfhRequest(String employeeId, EmployeeWfhData employeeWfhData) {
+  private Optional<WfhRequestStatus> validateWfhRequest(
+      String employeeId, EmployeeWfhData employeeWfhData) {
     List<EmployeeWfhDetail> employeeWfhDetailList =
         employeeWfhDetailRepository.findByEmployeeId(employeeId);
 
@@ -173,5 +172,24 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   private Map<WfhType, Long> addMissingWfhTypeInfoToMap(Map<WfhType, Long> wfhTypeByCountMap) {
     Arrays.stream(WfhType.values()).forEach(wfhType -> wfhTypeByCountMap.putIfAbsent(wfhType, 0L));
     return wfhTypeByCountMap;
+  }
+
+  @Override
+  public List<EmployeeWfhApprovalData> getEmployeePendingWfhRequests(String approverId) {
+    List<EmployeeWfhDetail> pendingWfhRequests =
+        employeeWfhDetailRepository.getWfhRequestsByStatus(WfhRequestStatus.PENDING_APPROVAL);
+
+    return pendingWfhRequests.stream()
+        .map(
+            employeeWfhDetail ->
+                EmployeeWfhApprovalData.builder()
+                    .name(employeeWfhDetail.getEmployeeDetail().getName())
+                    .email(employeeWfhDetail.getEmployeeDetail().getEmail())
+                    .employeeId(employeeWfhDetail.getEmployeeId())
+                    .requestType(employeeWfhDetail.getWfhType())
+                    .requestDate(employeeWfhDetail.getRequestedWfhDate().toString())
+                    .status(employeeWfhDetail.getStatus())
+                    .build())
+        .toList();
   }
 }

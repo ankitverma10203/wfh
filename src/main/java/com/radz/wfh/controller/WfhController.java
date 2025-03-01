@@ -27,20 +27,23 @@ public class WfhController {
   @PostMapping("/requestWfh")
   public ResponseEntity<?> requestWfh(@Valid @RequestBody EmployeeWfhData employeeWfhData) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    WfhResponse wfhResponse = wfhDetailService.requestWfh(authentication.getName(), employeeWfhData);
+    WfhResponse wfhResponse =
+        wfhDetailService.requestWfh(authentication.getName(), employeeWfhData);
     return new ResponseEntity<>(wfhResponse, HttpStatus.OK);
   }
 
   @GetMapping("/getEmployeeWfhDetail")
   public ResponseEntity<?> getEmployeeWfhDetail() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhDetail(authentication.getName()), HttpStatus.OK);
+    return new ResponseEntity<>(
+        wfhDetailService.getEmployeeWfhDetail(authentication.getName()), HttpStatus.OK);
   }
 
   @GetMapping("/getEmployeeWfhBalance")
   public ResponseEntity<?> getEmployeeWfhBalance() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return new ResponseEntity<>(wfhDetailService.getEmployeeWfhBalance(authentication.getName()), HttpStatus.OK);
+    return new ResponseEntity<>(
+        wfhDetailService.getEmployeeWfhBalance(authentication.getName()), HttpStatus.OK);
   }
 
   @GetMapping("/getPendingEmployeeRegistration")
@@ -54,10 +57,24 @@ public class WfhController {
     return new ResponseEntity<>(employeeDetailService.getManagerDetails(), HttpStatus.OK);
   }
 
+  @GetMapping("/getEmployeePendingWfhRequests")
+  public ResponseEntity<?> getEmployeePendingWfhRequests() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(
+        wfhDetailService.getEmployeePendingWfhRequests(authentication.getName()), HttpStatus.OK);
+  }
+
   @PostMapping("/updateEmployeeData")
-  public ResponseEntity<?> requestWfh(@Valid @RequestBody EmployeeDetailData employeeDetailData) {
+  public ResponseEntity<?> updateEmployeeData(
+      @Valid @RequestBody EmployeeDetailData employeeDetailData) {
 
     boolean isUpdateSuccessful = employeeDetailService.updateEmployeeDetail(employeeDetailData);
     return new ResponseEntity<>(isUpdateSuccessful, HttpStatus.OK);
+  }
+
+  @GetMapping("/getEmployeeData")
+  public ResponseEntity<?> getEmployeeDetail() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(employeeDetailService.getEmployeeDetail(authentication.getName()), HttpStatus.OK);
   }
 }

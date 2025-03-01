@@ -1,6 +1,7 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.EmployeeStatus;
+import com.radz.wfh.constant.Role;
 import com.radz.wfh.dto.EmployeeInfo;
 import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
@@ -23,13 +24,19 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
   @Override
   public EmployeeStatus register(EmployeeInfo employeeInfo) {
 
-    EmployeeStatus status = EmployeeStatus.PENDING_APPROVAL;
+    boolean isEmployeeDetailTableEmpty = employeeDetailRepository.count() == 0;
+
+    EmployeeStatus status =
+        isEmployeeDetailTableEmpty ? EmployeeStatus.ACTIVE : EmployeeStatus.PENDING_APPROVAL;
+    Role role = isEmployeeDetailTableEmpty ? Role.ADMIN : Role.EMPLOYEE;
+
     EmployeeDetail employeeDetail =
         EmployeeDetail.builder()
             .employeeId(employeeInfo.getSub())
             .name(employeeInfo.getName())
             .email(employeeInfo.getEmail())
             .status(status)
+            .role(role)
             .build();
 
     employeeDetailRepository.save(employeeDetail);

@@ -25,15 +25,18 @@ public class EmployeeDetail {
   @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   private String email;
 
   @Builder.Default
   @Column(nullable = false)
-  private Long managerId = 0L;
+  private String managerId = "0";
 
   @Enumerated(EnumType.STRING)
   private EmployeeStatus status;
+
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeDetail")
   private List<EmployeeWfhDetail> employeeWfhDetailList;
