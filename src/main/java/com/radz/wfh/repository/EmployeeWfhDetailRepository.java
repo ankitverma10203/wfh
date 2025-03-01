@@ -25,7 +25,7 @@ public interface EmployeeWfhDetailRepository extends JpaRepository<EmployeeWfhDe
   @Modifying
   @Transactional
   @Query(
-      "update EmployeeWfhDetail e set e.status = :wfhRequestStatus where e.wfhRequestId = :wfhRequestId")
+      "update EmployeeWfhDetail e set e.status = :wfhRequestStatus, e.updatedTimestamp = CURRENT_TIMESTAMP where e.wfhRequestId = :wfhRequestId")
   void updateWfhRequestStatus(
       @Param("wfhRequestId") Long wfhRequestId,
       @Param("wfhRequestStatus") WfhRequestStatus wfhRequestStatus);
