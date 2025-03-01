@@ -183,6 +183,7 @@ public class WfhDetailServiceImpl implements WfhDetailService {
         .map(
             employeeWfhDetail ->
                 EmployeeWfhApprovalData.builder()
+                    .wfhRequestId(employeeWfhDetail.getWfhRequestId())
                     .name(employeeWfhDetail.getEmployeeDetail().getName())
                     .email(employeeWfhDetail.getEmployeeDetail().getEmail())
                     .employeeId(employeeWfhDetail.getEmployeeId())
@@ -191,5 +192,13 @@ public class WfhDetailServiceImpl implements WfhDetailService {
                     .status(employeeWfhDetail.getStatus())
                     .build())
         .toList();
+  }
+
+  @Override
+  public WfhRequestStatus updateEmployeeWfhRequest(
+      Long wfhRequestId, WfhRequestStatus wfhRequestStatus) {
+
+    employeeWfhDetailRepository.updateWfhRequestStatus(wfhRequestId, wfhRequestStatus);
+    return wfhRequestStatus;
   }
 }

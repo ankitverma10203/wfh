@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeWfhApprovalData {
+  private Long wfhRequestId;
   private String employeeId;
   private String name;
   private String email;
