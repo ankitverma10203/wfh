@@ -17,8 +17,9 @@ public interface EmployeeWfhDetailRepository extends JpaRepository<EmployeeWfhDe
   List<EmployeeWfhDetail> findByEmployeeId(String employeeId);
 
   @Query(
-      "select e from EmployeeWfhDetail e Join EmployeeDetail ed on e.employeeId = ed.employeeId where e.status = :wfhRequestStatus")
+      "select e from EmployeeWfhDetail e Join EmployeeDetail ed on e.employeeId = ed.employeeId where e.status = :wfhRequestStatus and e.employeeDetail.managerId = :approverId")
   List<EmployeeWfhDetail> getWfhRequestsByStatus(
+          @Param("approverId") String approverId,
       @Param("wfhRequestStatus") WfhRequestStatus wfhRequestStatus);
 
   @Modifying

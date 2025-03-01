@@ -58,6 +58,11 @@ public class WfhController {
     return new ResponseEntity<>(employeeDetailService.getManagerDetails(), HttpStatus.OK);
   }
 
+  @GetMapping("/getAdmins")
+  public ResponseEntity<?> getAdmins() {
+    return new ResponseEntity<>(employeeDetailService.getAdminDetails(), HttpStatus.OK);
+  }
+
   @GetMapping("/getEmployeePendingWfhRequests")
   public ResponseEntity<?> getEmployeePendingWfhRequests() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,7 +89,7 @@ public class WfhController {
   public ResponseEntity<?> updateWfhRequestStatus(
       @RequestParam("wfhRequestId") Long wfhRequestId,
       @RequestParam("status") WfhRequestStatus status) {
-      return new ResponseEntity<>(
+    return new ResponseEntity<>(
         wfhDetailService.updateEmployeeWfhRequest(wfhRequestId, status), HttpStatus.OK);
   }
 }
