@@ -1,14 +1,13 @@
-# Use a base image with Java 22
-FROM openjdk:22-jdk-slim
-
-# Set the working directory in the container
+# Stage 1: Build the application
+FROM maven:3.9.5-eclipse-temurin-22 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the JAR file into the container
-COPY target/*.jar app.jar
-
-# Expose the port your Spring Boot application runs on (usually 8080)
+# Stage 2: Create the runtime image
+FROM openjdk:22-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the Spring Boot application using Java 22
 ENTRYPOINT ["java", "--enable-preview", "-jar", "app.jar"]
