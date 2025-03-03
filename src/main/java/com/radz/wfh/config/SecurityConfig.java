@@ -1,12 +1,12 @@
 package com.radz.wfh.config;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -17,15 +17,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  @Value("${allowed.origin}")
+  private String allowedOrigin;
+
   @Bean
   protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.cors(
             httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-        //        .csrf(
-        //            httpSecurityCsrfConfigurer ->
-        //                httpSecurityCsrfConfigurer.ignoringRequestMatchers("/h2-console/**"))
-        .csrf(AbstractHttpConfigurer::disable)
+        .csrf(
+            httpSecurityCsrfConfigurer ->
+                httpSecurityCsrfConfigurer.ignoringRequestMatchers("/h2-console/**"))
         .headers(
             httpSecurityHeadersConfigurer ->
                 httpSecurityHeadersConfigurer.frameOptions(
@@ -41,8 +43,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(
-        List.of("http://localhost:5173")); // Replace with your frontend origin
+    configuration.setAllowedOrigins(List.of(allowedOrigin)); // Replace with your frontend origin
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Allowed methods
     configuration.setAllowedHeaders(List.of("*")); // Allowed headers
     configuration.setAllowCredentials(true); // Allow cookies

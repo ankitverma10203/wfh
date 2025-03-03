@@ -43,3 +43,6 @@ logging:
   level:
     org.aspectj: DEBUG
     org.springframework.aop: DEBUG
+
+allowed:
+  origin: https://wfh-frontend.vercel.app
