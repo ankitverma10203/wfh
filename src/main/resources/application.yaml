@@ -1,8 +1,6 @@
 spring:
   application:
     name: wfh
-  config:
-    import: file:src/main/resources/env.properties
   datasource:
     url: jdbc:h2:mem:wfh
     driverClassName: org.h2.Driver
@@ -18,28 +16,22 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://${auth0.domain}/
-          audience: https://${auth0.domain}/api/v2/
+          issuer-uri: https://dev-38ur00tkntqcylhl.us.auth0.com/
+          audience: https://dev-38ur00tkntqcylhl.us.auth0.com/api/v2/
 
 security:
   jwt:
     secret-key: b8396c432a0d45c1efc70a38d76ef49a3272570305b5c382a569ebaa50c95ed9
     expiration-time: 36000
 
-backend:
-  client:
-    id: ${backend.client.id}
-    secret: ${backend.client.secret}
-  audience: https://${auth0.domain}/api/v2/
-  grant-type: client_credentials
-  token:
-    url: https://${auth0.domain}/oauth/token
-
 user:
   info:
-    url: https://${auth0.domain}/userinfo
+    url: https://dev-38ur00tkntqcylhl.us.auth0.com/userinfo
 
 logging:
   level:
     org.aspectj: DEBUG
     org.springframework.aop: DEBUG
+
+allowed:
+  origin: https://wfh-frontend.vercel.app

@@ -19,21 +19,6 @@ public class Auth0Service {
 
   private final RestTemplate restTemplate;
 
-  @Value("${backend.client.id}")
-  private String clientId;
-
-  @Value("${backend.client.secret}")
-  private String clientSecret;
-
-  @Value("${backend.audience}")
-  private String audience;
-
-  @Value("${backend.grant-type}")
-  private String grantType;
-
-  @Value("${backend.token.url}")
-  private String backendTokenUrl;
-
   @Value("${user.info.url}")
   private String userInfoUrl;
 
