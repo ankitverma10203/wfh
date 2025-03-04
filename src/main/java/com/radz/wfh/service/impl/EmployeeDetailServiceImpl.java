@@ -6,6 +6,7 @@ import com.radz.wfh.dto.EmployeeDetailData;
 import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
+import com.radz.wfh.service.NotificationService;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,12 @@ import org.springframework.stereotype.Service;
 public class EmployeeDetailServiceImpl implements EmployeeDetailService {
 
   private final EmployeeDetailRepository employeeDetailRepository;
+  private final NotificationService notificationService;
 
-  public EmployeeDetailServiceImpl(EmployeeDetailRepository employeeDetailRepository) {
+  public EmployeeDetailServiceImpl(
+      EmployeeDetailRepository employeeDetailRepository, NotificationService notificationService) {
     this.employeeDetailRepository = employeeDetailRepository;
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -77,6 +81,12 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     employeeDetail.setManagerId(employeeDetailData.getManagerId());
     employeeDetail.setRole(employeeDetailData.getRole());
     employeeDetailRepository.save(employeeDetail);
+
+    String notificationMessage =
+        String.format(
+            "Employee Detail Update: Status:%s, managerId:%s, role:%s",
+            employeeDetail.getStatus(), employeeDetail.getManagerId(), employeeDetail.getRole());
+    notificationService.saveAndPushNotification(employeeDetail.getEmployeeId(), notificationMessage);
     return true;
   }
 

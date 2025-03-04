@@ -5,6 +5,7 @@ import com.radz.wfh.constant.WfhType;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.model.EmployeeWfhDetail;
 import com.radz.wfh.repository.EmployeeWfhDetailRepository;
+import com.radz.wfh.service.NotificationService;
 import com.radz.wfh.service.WfhDetailService;
 import com.radz.wfh.service.WfhQuantityRefService;
 import java.time.LocalDate;
@@ -20,12 +21,15 @@ public class WfhDetailServiceImpl implements WfhDetailService {
 
   private final EmployeeWfhDetailRepository employeeWfhDetailRepository;
   private final WfhQuantityRefService wfhQuantityRefService;
+  private final NotificationService notificationService;
 
   public WfhDetailServiceImpl(
       EmployeeWfhDetailRepository employeeWfhDetailRepository,
-      WfhQuantityRefService wfhQuantityRefService) {
+      WfhQuantityRefService wfhQuantityRefService,
+      NotificationService notificationService) {
     this.employeeWfhDetailRepository = employeeWfhDetailRepository;
     this.wfhQuantityRefService = wfhQuantityRefService;
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -204,7 +208,22 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   public WfhRequestStatus updateEmployeeWfhRequest(
       Long wfhRequestId, WfhRequestStatus wfhRequestStatus) {
 
-    employeeWfhDetailRepository.updateWfhRequestStatus(wfhRequestId, wfhRequestStatus);
+    Optional<EmployeeWfhDetail> wfhReqOptional = employeeWfhDetailRepository.findById(wfhRequestId);
+
+    if (wfhReqOptional.isPresent()) {
+      EmployeeWfhDetail employeeWfhDetail = wfhReqOptional.get();
+      employeeWfhDetail.setStatus(wfhRequestStatus);
+
+      String notificationMessage =
+          String.format(
+              "Wfh Request Updated: request type:%s, request date:%s, status:%s",
+              employeeWfhDetail.getWfhType(),
+              employeeWfhDetail.getRequestedWfhDate(),
+              employeeWfhDetail.getStatus());
+
+      notificationService.saveAndPushNotification(employeeWfhDetail.getEmployeeId(), notificationMessage);
+    }
+
     return wfhRequestStatus;
   }
 }

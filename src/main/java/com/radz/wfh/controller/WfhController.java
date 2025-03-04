@@ -3,8 +3,10 @@ package com.radz.wfh.controller;
 import com.radz.wfh.constant.WfhRequestStatus;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.service.EmployeeDetailService;
+import com.radz.wfh.service.NotificationService;
 import com.radz.wfh.service.WfhDetailService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,11 +19,15 @@ public class WfhController {
 
   private final WfhDetailService wfhDetailService;
   private final EmployeeDetailService employeeDetailService;
+  private final NotificationService notificationService;
 
   public WfhController(
-      WfhDetailService wfhDetailService, EmployeeDetailService employeeDetailService) {
+      WfhDetailService wfhDetailService,
+      EmployeeDetailService employeeDetailService,
+      NotificationService notificationService) {
     this.wfhDetailService = wfhDetailService;
     this.employeeDetailService = employeeDetailService;
+    this.notificationService = notificationService;
   }
 
   @PostMapping("/requestWfh")
@@ -90,5 +96,20 @@ public class WfhController {
       @RequestParam("status") WfhRequestStatus status) {
     return new ResponseEntity<>(
         wfhDetailService.updateEmployeeWfhRequest(wfhRequestId, status), HttpStatus.OK);
+  }
+
+  @GetMapping("/getNotifications")
+  public ResponseEntity<?> getNotifications() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(
+        notificationService.getNotifications(authentication.getName()), HttpStatus.OK);
+  }
+
+  @PostMapping("/clearNotifications")
+  public ResponseEntity<?> clearNotifications(@RequestBody List<Long> notificationIds) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(
+        notificationService.clearNotifications(authentication.getName(), notificationIds),
+        HttpStatus.OK);
   }
 }
