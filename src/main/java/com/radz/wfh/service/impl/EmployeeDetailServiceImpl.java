@@ -108,4 +108,12 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                     .build())
         .orElse(EmployeeDetailData.builder().build());
   }
+
+  @Override
+  public String getManagerForEmployee(String employeeId) {
+    Optional<EmployeeDetail> employeeDetailOptional =
+            employeeDetailRepository.findById(employeeId);
+
+    return employeeDetailOptional.map(EmployeeDetail::getManagerId).orElse(null);
+  }
 }

@@ -15,4 +15,6 @@ public interface EmployeeDetailService {
   boolean updateEmployeeDetail(@Valid EmployeeDetailData employeeDetailData);
 
   EmployeeDetailData getEmployeeDetail(String requestedId);
+
+  String getManagerForEmployee(String employeeId);
 }

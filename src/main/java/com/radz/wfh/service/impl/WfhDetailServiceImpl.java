@@ -5,6 +5,7 @@ import com.radz.wfh.constant.WfhType;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.model.EmployeeWfhDetail;
 import com.radz.wfh.repository.EmployeeWfhDetailRepository;
+import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.NotificationService;
 import com.radz.wfh.service.WfhDetailService;
 import com.radz.wfh.service.WfhQuantityRefService;
@@ -22,14 +23,17 @@ public class WfhDetailServiceImpl implements WfhDetailService {
   private final EmployeeWfhDetailRepository employeeWfhDetailRepository;
   private final WfhQuantityRefService wfhQuantityRefService;
   private final NotificationService notificationService;
+  private final EmployeeDetailService employeeDetailService;
 
   public WfhDetailServiceImpl(
       EmployeeWfhDetailRepository employeeWfhDetailRepository,
       WfhQuantityRefService wfhQuantityRefService,
-      NotificationService notificationService) {
+      NotificationService notificationService,
+      EmployeeDetailService employeeDetailService) {
     this.employeeWfhDetailRepository = employeeWfhDetailRepository;
     this.wfhQuantityRefService = wfhQuantityRefService;
     this.notificationService = notificationService;
+    this.employeeDetailService = employeeDetailService;
   }
 
   @Override
@@ -52,6 +56,17 @@ public class WfhDetailServiceImpl implements WfhDetailService {
             .build();
 
     employeeWfhDetailRepository.save(employeeWfhDetail);
+
+    String notificationMessage =
+        String.format(
+            "Wfh Approval Request: request type:%s, request date:%s, status:%s",
+            employeeWfhDetail.getWfhType(),
+            employeeWfhDetail.getRequestedWfhDate(),
+            employeeWfhDetail.getStatus());
+
+    notificationService.saveAndPushNotification(
+        employeeDetailService.getManagerForEmployee(employeeId), notificationMessage);
+
     return WfhResponse.builder().successFlg(true).status(wfhRequestStatus).build();
   }
 
@@ -221,7 +236,8 @@ public class WfhDetailServiceImpl implements WfhDetailService {
               employeeWfhDetail.getRequestedWfhDate(),
               employeeWfhDetail.getStatus());
 
-      notificationService.saveAndPushNotification(employeeWfhDetail.getEmployeeId(), notificationMessage);
+      notificationService.saveAndPushNotification(
+          employeeWfhDetail.getEmployeeId(), notificationMessage);
     }
 
     return wfhRequestStatus;
