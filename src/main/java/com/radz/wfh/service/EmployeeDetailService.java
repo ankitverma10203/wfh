@@ -8,6 +8,8 @@ public interface EmployeeDetailService {
 
   List<EmployeeDetailData> getPendingRegisterRequestList();
 
+  List<EmployeeDetailData> getAllEmployeesDetail();
+
   List<EmployeeDetailData> getManagerDetails();
 
   List<EmployeeDetailData> getAdminDetails();

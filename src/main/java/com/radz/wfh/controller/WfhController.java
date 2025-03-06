@@ -75,6 +75,13 @@ public class WfhController {
         wfhDetailService.getEmployeePendingWfhRequests(authentication.getName()), HttpStatus.OK);
   }
 
+  @GetMapping("/getAllEmployeesDetail")
+  public ResponseEntity<?> getAllEmployeesDetail() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return new ResponseEntity<>(
+            employeeDetailService.getAllEmployeesDetail(), HttpStatus.OK);
+  }
+
   @PostMapping("/updateEmployeeData")
   public ResponseEntity<?> updateEmployeeData(
       @Valid @RequestBody EmployeeDetailData employeeDetailData) {
