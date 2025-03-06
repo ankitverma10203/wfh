@@ -2,6 +2,12 @@
 
 This project is a backend application developed using Java, designed to streamline the Work From Home (WFH) request and approval process. It provides a user-friendly interface for employees to submit, view, and manage their WFH requests, and for managers to review and approve or reject these requests.
 
+
+https://github.com/user-attachments/assets/e48e9033-4b4e-4436-afb7-7a3f380f0e4e
+
+
+**WFH frondend project repository:** [WFH-Frontend project repository](https://github.com/ankitverma10203/wfh-frontend)
+
 ## Features
 
 - **Java/Springboot**: The core programming language used for backend development.
