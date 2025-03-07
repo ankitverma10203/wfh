@@ -6,4 +6,6 @@ import java.util.Map;
 
 public interface WfhQuantityRefService {
     Map<WfhType, Long> getQuantityByWfhTypeMap();
+
+    boolean updateWfhQuantity(Map<WfhType, Long> wfhQuantityMap);
 }

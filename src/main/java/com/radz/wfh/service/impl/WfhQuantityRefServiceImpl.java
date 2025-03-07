@@ -38,6 +38,18 @@ public class WfhQuantityRefServiceImpl implements WfhQuantityRefService, Command
   }
 
   @Override
+  public boolean updateWfhQuantity(Map<WfhType, Long> wfhQuantityMap) {
+    wfhQuantityMap.forEach(
+        (key, value) -> {
+          wfhQuantityRefRepository.save(
+              WfhQuantityRef.builder().wfhType(key).quantity(value).build());
+        });
+
+    init();
+    return true;
+  }
+
+  @Override
   public void run(String... args) throws Exception {
     init();
   }

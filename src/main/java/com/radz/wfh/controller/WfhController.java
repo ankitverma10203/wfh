@@ -1,12 +1,15 @@
 package com.radz.wfh.controller;
 
 import com.radz.wfh.constant.WfhRequestStatus;
+import com.radz.wfh.constant.WfhType;
 import com.radz.wfh.dto.*;
 import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.NotificationService;
 import com.radz.wfh.service.WfhDetailService;
+import com.radz.wfh.service.WfhQuantityRefService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,14 +23,17 @@ public class WfhController {
   private final WfhDetailService wfhDetailService;
   private final EmployeeDetailService employeeDetailService;
   private final NotificationService notificationService;
+  private final WfhQuantityRefService wfhQuantityRefService;
 
   public WfhController(
       WfhDetailService wfhDetailService,
       EmployeeDetailService employeeDetailService,
-      NotificationService notificationService) {
+      NotificationService notificationService,
+      WfhQuantityRefService wfhQuantityRefService) {
     this.wfhDetailService = wfhDetailService;
     this.employeeDetailService = employeeDetailService;
     this.notificationService = notificationService;
+    this.wfhQuantityRefService = wfhQuantityRefService;
   }
 
   @PostMapping("/requestWfh")
@@ -78,8 +84,7 @@ public class WfhController {
   @GetMapping("/getAllEmployeesDetail")
   public ResponseEntity<?> getAllEmployeesDetail() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return new ResponseEntity<>(
-            employeeDetailService.getAllEmployeesDetail(), HttpStatus.OK);
+    return new ResponseEntity<>(employeeDetailService.getAllEmployeesDetail(), HttpStatus.OK);
   }
 
   @PostMapping("/updateEmployeeData")
@@ -118,5 +123,16 @@ public class WfhController {
     return new ResponseEntity<>(
         notificationService.clearNotifications(authentication.getName(), notificationIds),
         HttpStatus.OK);
+  }
+
+  @GetMapping("/getWfhRefQuantity")
+  public ResponseEntity<?> getWfhRefQuantity() {
+    return new ResponseEntity<>(wfhQuantityRefService.getQuantityByWfhTypeMap(), HttpStatus.OK);
+  }
+
+  @PostMapping("/updateWfhRefQuantity")
+  public ResponseEntity<?> updateWfhRefQuantity(@RequestBody Map<WfhType, Long> wfhRefQuantityMap) {
+    return new ResponseEntity<>(
+        wfhQuantityRefService.updateWfhQuantity(wfhRefQuantityMap), HttpStatus.OK);
   }
 }
