@@ -35,3 +35,10 @@ logging:
 
 allowed:
   origin: ${ALLOWED_HOST}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
