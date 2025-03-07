@@ -34,4 +34,4 @@ logging:
     org.springframework.aop: DEBUG
 
 allowed:
-  origin: https://wfh-frontend.vercel.app
+  origin: ${ALLOWED_HOST}
