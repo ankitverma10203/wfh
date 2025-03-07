@@ -34,6 +34,13 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
   }
 
   @Override
+  public List<EmployeeDetailData> getAllEmployeesDetail() {
+    List<EmployeeDetail> pendingRegistrationList = employeeDetailRepository.findAll();
+
+    return createEmployeeDetailDataList(pendingRegistrationList);
+  }
+
+  @Override
   public List<EmployeeDetailData> getManagerDetails() {
 
     List<EmployeeDetail> managerDetails =
@@ -86,7 +93,8 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
         String.format(
             "Employee Detail Update: Status:%s, managerId:%s, role:%s",
             employeeDetail.getStatus(), employeeDetail.getManagerId(), employeeDetail.getRole());
-    notificationService.saveAndPushNotification(employeeDetail.getEmployeeId(), notificationMessage);
+    notificationService.saveAndPushNotification(
+        employeeDetail.getEmployeeId(), notificationMessage);
     return true;
   }
 
@@ -107,5 +115,12 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                     .role(employeeDetail.getRole())
                     .build())
         .orElse(EmployeeDetailData.builder().build());
+  }
+
+  @Override
+  public String getManagerForEmployee(String employeeId) {
+    Optional<EmployeeDetail> employeeDetailOptional = employeeDetailRepository.findById(employeeId);
+
+    return employeeDetailOptional.map(EmployeeDetail::getManagerId).orElse(null);
   }
 }

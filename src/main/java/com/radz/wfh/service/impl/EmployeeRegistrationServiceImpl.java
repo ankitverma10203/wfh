@@ -56,13 +56,13 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
     List<EmployeeDetailData> adminDetails = employeeDetailService.getAdminDetails();
     String notificationMessage =
         String.format(
-            "Employee Registered: employee id:%s, name:%s, email:%s",
+            "Employee Registration Approval Request: employee id:%s, name:%s, email:%s",
             employeeDetail.getEmployeeId(), employeeDetail.getName(), employeeDetail.getEmail());
 
     adminDetails.forEach(
         employeeDetailData -> {
           notificationService.saveAndPushNotification(
-              employeeDetailData.getEmployeeId(), notificationMessage);
+              employeeDetailData.getManagerId(), notificationMessage);
         });
 
     return status;
