@@ -1,12 +1,14 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.EmployeeStatus;
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.constant.Role;
 import com.radz.wfh.dto.EmployeeDetailData;
 import com.radz.wfh.model.EmployeeDetail;
 import com.radz.wfh.repository.EmployeeDetailRepository;
 import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.NotificationService;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -90,9 +92,12 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     employeeDetailRepository.save(employeeDetail);
 
     String notificationMessage =
-        String.format(
-            "Employee Detail Update: Status:%s, managerId:%s, role:%s",
-            employeeDetail.getStatus(), employeeDetail.getManagerId(), employeeDetail.getRole());
+        MessageFormat.format(
+            NotificationType.UPDATE_EMPLOYEE_DETAIL.getMessage()
+                + ": Status: {0}, managerId: {1}, role: {2}",
+            employeeDetail.getStatus(),
+            employeeDetail.getManagerId(),
+            employeeDetail.getRole());
     notificationService.saveAndPushNotification(
         employeeDetail.getEmployeeId(), notificationMessage);
     return true;
