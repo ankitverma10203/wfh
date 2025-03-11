@@ -67,7 +67,9 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
     adminDetails.forEach(
         employeeDetailData -> {
           notificationService.saveAndPushNotification(
-              employeeDetailData.getManagerId(), notificationMessage);
+              employeeDetailData.getManagerId(),
+              notificationMessage,
+              NotificationType.APPROVAL_REQUEST_REGISTRATION);
         });
 
     return status;

@@ -1,5 +1,6 @@
 package com.radz.wfh.model;
 
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.constant.WfhConstants;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public class EmployeeNotificationDetail {
   private String employeeId;
 
   private String message;
+
+  @Enumerated(EnumType.STRING)
+  private NotificationType notificationType;
 
   @Builder.Default
   @Column(nullable = false, updatable = false)

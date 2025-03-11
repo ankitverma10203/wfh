@@ -1,5 +1,6 @@
 package com.radz.wfh.dto;
 
+import com.radz.wfh.constant.NotificationType;
 import lombok.*;
 
 @Data
@@ -10,6 +11,8 @@ import lombok.*;
 public class EmployeeNotificationData {
 
   private Long notificationId;
+
+  private NotificationType notificationType;
 
   private String message;
 

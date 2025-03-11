@@ -68,7 +68,9 @@ public class WfhDetailServiceImpl implements WfhDetailService {
             employeeWfhDetail.getStatus());
 
     notificationService.saveAndPushNotification(
-        employeeDetailService.getManagerForEmployee(employeeId), notificationMessage);
+        employeeDetailService.getManagerForEmployee(employeeId),
+        notificationMessage,
+        NotificationType.APPROVAL_REQUEST_WFH);
 
     return WfhResponse.builder().successFlg(true).status(wfhRequestStatus).build();
   }
@@ -241,7 +243,9 @@ public class WfhDetailServiceImpl implements WfhDetailService {
               employeeWfhDetail.getStatus());
 
       notificationService.saveAndPushNotification(
-          employeeWfhDetail.getEmployeeId(), notificationMessage);
+          employeeWfhDetail.getEmployeeId(),
+          notificationMessage,
+          NotificationType.UPDATE_WFH_REQUEST);
     }
 
     return wfhRequestStatus;

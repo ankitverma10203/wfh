@@ -99,7 +99,7 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
             employeeDetail.getManagerId(),
             employeeDetail.getRole());
     notificationService.saveAndPushNotification(
-        employeeDetail.getEmployeeId(), notificationMessage);
+        employeeDetail.getEmployeeId(), notificationMessage, NotificationType.UPDATE_EMPLOYEE_DETAIL);
     return true;
   }
 

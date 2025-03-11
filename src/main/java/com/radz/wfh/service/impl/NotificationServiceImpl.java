@@ -1,5 +1,6 @@
 package com.radz.wfh.service.impl;
 
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.dto.EmployeeNotificationData;
 import com.radz.wfh.model.EmployeeNotificationDetail;
 import com.radz.wfh.repository.EmployeeNotificationRepository;
@@ -40,9 +41,14 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public void saveAndPushNotification(String employeeId, String message) {
+  public void saveAndPushNotification(
+      String employeeId, String message, NotificationType notificationType) {
     EmployeeNotificationDetail employeeNotificationDetail =
-        EmployeeNotificationDetail.builder().employeeId(employeeId).message(message).build();
+        EmployeeNotificationDetail.builder()
+            .employeeId(employeeId)
+            .message(message)
+            .notificationType(notificationType)
+            .build();
 
     employeeNotificationRepository.save(employeeNotificationDetail);
 
@@ -51,7 +57,7 @@ public class NotificationServiceImpl implements NotificationService {
         EmployeeNotificationData.builder()
             .notificationId(employeeNotificationDetail.getNotificationId())
             .message(employeeNotificationDetail.getMessage())
-            //
+            .notificationType(employeeNotificationDetail.getNotificationType())
             // .createdTimestamp(employeeNotificationDetail.getCreatedTimestamp().format(formatter))
             .build();
 
