@@ -2,6 +2,8 @@
 FROM maven:3-eclipse-temurin-22-alpine AS builder
 WORKDIR /app
 COPY pom.xml .
+COPY checkstyle.xml .
+COPY pmd-ruleset.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
