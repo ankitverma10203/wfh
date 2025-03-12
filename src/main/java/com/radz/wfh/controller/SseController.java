@@ -32,6 +32,9 @@ public class SseController {
                 log.error("Exception while pushing the notification.", e);
               }
             })
-        .doOnCancel(() -> notificationService.removeSink(employeeId));
+        .doOnCancel(() -> {
+            sink.tryEmitComplete().orThrow();
+            notificationService.removeSink(employeeId);
+        });
   }
 }

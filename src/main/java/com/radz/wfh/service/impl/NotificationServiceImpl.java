@@ -1,5 +1,6 @@
 package com.radz.wfh.service.impl;
 
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.dto.EmployeeNotificationData;
 import com.radz.wfh.model.EmployeeNotificationDetail;
 import com.radz.wfh.repository.EmployeeNotificationRepository;
@@ -35,23 +36,28 @@ public class NotificationServiceImpl implements NotificationService {
 
   private void pushNotification(
       String employeeId, EmployeeNotificationData employeeNotificationData) {
-    getSink(employeeId).tryEmitNext(employeeNotificationData);
+    getSink(employeeId).tryEmitNext(employeeNotificationData).orThrow();
     log.info("Notification sent");
   }
 
   @Override
-  public void saveAndPushNotification(String employeeId, String message) {
+  public void saveAndPushNotification(
+      String employeeId, String message, NotificationType notificationType) {
     EmployeeNotificationDetail employeeNotificationDetail =
-        EmployeeNotificationDetail.builder().employeeId(employeeId).message(message).build();
+        EmployeeNotificationDetail.builder()
+            .employeeId(employeeId)
+            .message(message)
+            .notificationType(notificationType)
+            .build();
 
     employeeNotificationRepository.save(employeeNotificationDetail);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss");
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss");
     EmployeeNotificationData employeeNotificationData =
         EmployeeNotificationData.builder()
             .notificationId(employeeNotificationDetail.getNotificationId())
             .message(employeeNotificationDetail.getMessage())
-            //
+            .notificationType(employeeNotificationDetail.getNotificationType())
             // .createdTimestamp(employeeNotificationDetail.getCreatedTimestamp().format(formatter))
             .build();
 

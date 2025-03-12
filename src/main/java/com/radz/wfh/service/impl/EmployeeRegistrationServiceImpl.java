@@ -1,6 +1,7 @@
 package com.radz.wfh.service.impl;
 
 import com.radz.wfh.constant.EmployeeStatus;
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.constant.Role;
 import com.radz.wfh.dto.EmployeeDetailData;
 import com.radz.wfh.dto.EmployeeInfo;
@@ -10,6 +11,7 @@ import com.radz.wfh.service.EmployeeDetailService;
 import com.radz.wfh.service.EmployeeRegistrationService;
 import com.radz.wfh.service.NotificationService;
 import jakarta.transaction.Transactional;
+import java.text.MessageFormat;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,14 +57,19 @@ public class EmployeeRegistrationServiceImpl implements EmployeeRegistrationServ
 
     List<EmployeeDetailData> adminDetails = employeeDetailService.getAdminDetails();
     String notificationMessage =
-        String.format(
-            "Employee Registration Approval Request: employee id:%s, name:%s, email:%s",
-            employeeDetail.getEmployeeId(), employeeDetail.getName(), employeeDetail.getEmail());
+        MessageFormat.format(
+            NotificationType.APPROVAL_REQUEST_REGISTRATION.getMessage()
+                + ": employee id: {0}, name: {1}, email: {2}",
+            employeeDetail.getEmployeeId(),
+            employeeDetail.getName(),
+            employeeDetail.getEmail());
 
     adminDetails.forEach(
         employeeDetailData -> {
           notificationService.saveAndPushNotification(
-              employeeDetailData.getManagerId(), notificationMessage);
+              employeeDetailData.getManagerId(),
+              notificationMessage,
+              NotificationType.APPROVAL_REQUEST_REGISTRATION);
         });
 
     return status;

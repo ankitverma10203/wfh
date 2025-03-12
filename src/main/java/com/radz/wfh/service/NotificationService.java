@@ -1,5 +1,6 @@
 package com.radz.wfh.service;
 
+import com.radz.wfh.constant.NotificationType;
 import com.radz.wfh.dto.EmployeeNotificationData;
 import reactor.core.publisher.Sinks;
 
@@ -10,7 +11,8 @@ public interface NotificationService {
 
   void removeSink(String employeeId);
 
-  void saveAndPushNotification(String employeeId, String message);
+  void saveAndPushNotification(
+      String employeeId, String message, NotificationType notificationType);
 
   List<EmployeeNotificationData> getNotifications(String employeeId);
 
