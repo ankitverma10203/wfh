@@ -21,11 +21,15 @@ public class AOPConfig {
 
   @Before("isPublicMethod()")
   public void logBefore(JoinPoint joinPoint) {
-    log.info("Method called: {}", joinPoint.getSignature().toLongString());
+
+    log.debug(
+        "Method called: {} with args: {}",
+        joinPoint.getSignature().toLongString(),
+        joinPoint.getArgs());
   }
 
   @AfterReturning(pointcut = "isPublicMethod()", returning = "result")
   public void logAfterReturning(JoinPoint joinPoint, Object result) {
-    log.info("Method: {} returned: {}", joinPoint.getSignature().toShortString(), result);
+    log.debug("Method: {} returned: {}", joinPoint.getSignature().toShortString(), result);
   }
 }

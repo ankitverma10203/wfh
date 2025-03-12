@@ -36,7 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
 
   private void pushNotification(
       String employeeId, EmployeeNotificationData employeeNotificationData) {
-    getSink(employeeId).tryEmitNext(employeeNotificationData);
+    getSink(employeeId).tryEmitNext(employeeNotificationData).orThrow();
     log.info("Notification sent");
   }
 
