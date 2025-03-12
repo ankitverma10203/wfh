@@ -83,7 +83,6 @@ public class WfhController {
 
   @GetMapping("/getAllEmployeesDetail")
   public ResponseEntity<?> getAllEmployeesDetail() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return new ResponseEntity<>(employeeDetailService.getAllEmployeesDetail(), HttpStatus.OK);
   }
 

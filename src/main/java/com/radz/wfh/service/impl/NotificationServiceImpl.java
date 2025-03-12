@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     employeeNotificationRepository.save(employeeNotificationDetail);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss");
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm:ss");
     EmployeeNotificationData employeeNotificationData =
         EmployeeNotificationData.builder()
             .notificationId(employeeNotificationDetail.getNotificationId())
