@@ -2,13 +2,15 @@ spring:
   application:
     name: wfh
   datasource:
-    url: jdbc:h2:mem:wfh
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://dpg-cva7d0rqf0us73cfvjb0-a.oregon-postgres.render.com:5432/wfh_database
+    driverClassName: org.postgresql.Driver
+    username: wfh_user
+    password: J09I5KiQmebDMxJs3JJg9rxZBGuPSJNk
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
   h2:
     console:
       enabled: true
@@ -18,6 +20,7 @@ spring:
         jwt:
           issuer-uri: https://dev-38ur00tkntqcylhl.us.auth0.com/
           audience: https://dev-38ur00tkntqcylhl.us.auth0.com/api/v2/
+
 
 security:
   jwt:
@@ -30,8 +33,7 @@ user:
 
 logging:
   level:
-    org.aspectj: DEBUG
-    org.springframework.aop: DEBUG
+    com.radz.wfh: INFO
 
 allowed:
   origin: ${ALLOWED_HOST}
