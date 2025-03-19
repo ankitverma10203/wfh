@@ -4,8 +4,8 @@ spring:
   datasource:
     url: jdbc:postgresql://dpg-cva7d0rqf0us73cfvjb0-a.oregon-postgres.render.com:5432/wfh_database
     driverClassName: org.postgresql.Driver
-    username: wfh_user
-    password: J09I5KiQmebDMxJs3JJg9rxZBGuPSJNk
+    username:
+    password:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: true
