@@ -21,12 +21,6 @@ spring:
           issuer-uri: https://dev-38ur00tkntqcylhl.us.auth0.com/
           audience: https://dev-38ur00tkntqcylhl.us.auth0.com/api/v2/
 
-
-security:
-  jwt:
-    secret-key: b8396c432a0d45c1efc70a38d76ef49a3272570305b5c382a569ebaa50c95ed9
-    expiration-time: 36000
-
 user:
   info:
     url: https://dev-38ur00tkntqcylhl.us.auth0.com/userinfo
