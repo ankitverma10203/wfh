@@ -75,6 +75,7 @@ public class NotificationServiceImpl implements NotificationService {
                 EmployeeNotificationData.builder()
                     .notificationId(employeeNotificationDetail.getNotificationId())
                     .message(employeeNotificationDetail.getMessage())
+                    .notificationType(employeeNotificationDetail.getNotificationType())
                     .createdTimestamp(
                         employeeNotificationDetail.getCreatedTimestamp().format(formatter))
                     .build())
