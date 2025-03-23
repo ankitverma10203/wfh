@@ -3,7 +3,13 @@
 This project is a backend application developed using Java, designed to streamline the Work From Home (WFH) request and approval process. It provides a user-friendly interface for employees to submit, view, and manage their WFH requests, and for managers to review and approve or reject these requests.
 
 
-https://github.com/user-attachments/assets/e48e9033-4b4e-4436-afb7-7a3f380f0e4e
+
+https://github.com/user-attachments/assets/72b6fb04-eafe-4df4-9882-2736d15d43d3
+
+https://github.com/user-attachments/assets/1ba3f434-9cb6-4506-ad15-cd748984a47e
+
+https://github.com/user-attachments/assets/a3cf2194-ff50-4697-a565-9936ad26e70b
+
 
 
 **WFH frondend project repository:** [WFH-Frontend project repository](https://github.com/ankitverma10203/wfh-frontend)
