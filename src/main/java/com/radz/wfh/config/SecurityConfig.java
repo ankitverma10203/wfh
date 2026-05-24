@@ -25,9 +25,7 @@ public class SecurityConfig {
     return http.cors(
             httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-        .csrf(
-            httpSecurityCsrfConfigurer ->
-                httpSecurityCsrfConfigurer.ignoringRequestMatchers("/h2-console/**"))
+        .csrf(c -> c.ignoringRequestMatchers("/h2-console/**", "/wfh/getWfhRefQuantity"))
         .headers(
             httpSecurityHeadersConfigurer ->
                 httpSecurityHeadersConfigurer.frameOptions(
