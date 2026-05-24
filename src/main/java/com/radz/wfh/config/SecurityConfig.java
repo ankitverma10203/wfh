@@ -33,7 +33,7 @@ public class SecurityConfig {
                 httpSecurityHeadersConfigurer.frameOptions(
                     HeadersConfigurer.FrameOptionsConfig::sameOrigin))
         .authorizeHttpRequests(
-            request -> request.requestMatchers("/actuator/health/**").requestMatchers("/wfh/getWfhRefQuantity").permitAll().requestMatchers("/wfh/**").authenticated().anyRequest().permitAll())
+            request -> request..requestMatchers("/actuator/health/**", "/wfh/getWfhRefQuantity").permitAll().requestMatchers("/wfh/**").authenticated().anyRequest().permitAll())
         .oauth2ResourceServer(
             httpSecurityOAuth2ResourceServerConfigurer ->
                 httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults()))
